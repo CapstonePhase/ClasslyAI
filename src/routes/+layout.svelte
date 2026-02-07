@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import AnimatedWaves from '$lib/components/AnimatedWaves.svelte';
+	
 	let { children } = $props();
 	let page = $state('home');
 	let menuOpen = $state(false);
@@ -15,7 +15,7 @@
 
 <div class="app-grid">
 	<!-- Decorative ocean waves (purely visual) -->
-	<AnimatedWaves />
+	
 	<div class="ocean-background" aria-hidden="true"></div>
 	<!-- overlay for mobile menu -->
 	<div
