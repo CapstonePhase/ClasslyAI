@@ -1,9 +1,9 @@
 <script lang="ts">
-	export let title = 'Card Title';
-	export let description = 'This is a description of the card content.';
+	let { title = 'Card Title', description = 'This is a description of the card content.' } =
+		$props();
 </script>
 
-<div id="card">
+<div class="card">
 	<article>
 		<h2>{title}</h2>
 		<p>{description}</p>
@@ -11,7 +11,7 @@
 </div>
 
 <style>
-	#card {
+	.card {
 		/* Layered backgrounds: inner background on padding-box, gradient on border-box */
 		background:
 			linear-gradient(var(--card-bg, var(--bg-card)), var(--card-bg, var(--bg-card))) padding-box,
@@ -22,8 +22,15 @@
 		border-radius: var(--radius);
 		box-shadow: var(--card-shadow, var(--shadow));
 
-		width: 350px;
-		height:575px; ;
+		width: 100%;
+		max-width: 420px;
+		min-height: 180px;
+
+		/* Oceany subtle glass + float */
+		background-blend-mode: overlay;
+		backdrop-filter: blur(4px);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		animation: float 6s ease-in-out infinite;
 
 		/* Smooth, subtle scale on hover */
 		transform-origin: center;
@@ -34,7 +41,28 @@
 		will-change: transform;
 	}
 
-	#card:hover {
+	.card::after {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 40%;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
+		border-top-left-radius: var(--radius);
+		border-top-right-radius: var(--radius);
+		pointer-events: none;
+		opacity: 0.7;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card {
+			animation: none;
+		}
+	}
+
+	.card:hover {
 		transform: scale(1.03);
 		/* switch to the hover gradient variant */
 		background:

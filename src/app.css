@@ -21,7 +21,11 @@
 	--card-border-width: 1px;
 	/* Special card border: diagonal gradient (pink -> blue) */
 	--border-card: linear-gradient(135deg, rgba(255, 209, 232, 1) 0%, rgba(207, 231, 255, 1) 100%);
-	--border-card-hover: linear-gradient(135deg, rgba(255, 209, 232, 1) 0%, rgba(160, 210, 255, 1) 100%);
+	--border-card-hover: linear-gradient(
+		135deg,
+		rgba(255, 209, 232, 1) 0%,
+		rgba(160, 210, 255, 1) 100%
+	);
 	--card-shadow: 0 8px 20px -8px rgba(15, 23, 42, 0.06);
 	--card-shadow-hover: 0 20px 40px -12px rgba(15, 23, 42, 0.09);
 	--shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
@@ -31,6 +35,78 @@
 	--aside-width: 240px;
 	--radius: 8px;
 	--gap: 1rem;
+	/* Header and responsive tokens */
+	--bg-header: var(--bg-card);
+	--mobile-breakpoint: 768px;
+
+	/* Ocean theme tokens */
+	--ocean-gradient-start: #6ad0ff;
+	--ocean-gradient-end: #0077c2;
+	--ocean-surface: rgba(255, 255, 255, 0.06);
+	--ocean-accent: #66e0ff;
+	--ocean-deep: #003a63;
+	--bubble-color: rgba(255, 255, 255, 0.85);
+	--wave-speed: 6s;
+}
+
+/* Ocean keyframes */
+@keyframes wave-shift {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-20%);
+	}
+}
+
+@keyframes bubble-rise {
+	0% {
+		transform: translateY(0) scale(0.8);
+		opacity: 0.9;
+	}
+
+	50% {
+		opacity: 0.75;
+	}
+
+	100% {
+		transform: translateY(-240px) scale(1.1);
+		opacity: 0;
+	}
+}
+
+@keyframes float {
+	0% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(-6px);
+	}
+
+	100% {
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	/* turn off decorative animations for reduced-motion users */
+	.waves,
+	.bubble,
+	.card {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+/* small utility for adding an ocean backdrop where needed */
+.ocean-background {
+	position: fixed;
+	inset: 0;
+	background: linear-gradient(180deg, var(--ocean-gradient-start), transparent 35%);
+	pointer-events: none;
+	z-index: 0;
 }
 
 html,
