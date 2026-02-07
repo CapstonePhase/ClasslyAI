@@ -1,6 +1,6 @@
 <script lang="ts">
+	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-
 	let { children } = $props();
 </script>
 
@@ -14,7 +14,7 @@
 		<a href="/about">About</a>
 	</div>
 
-	<a href="/profile" class="profile-btn" aria-label="Profile"></a>
+	<a href="/profile" class="profile" aria-label="Profile"></a>
 </nav>
 
 {@render children()}
@@ -23,7 +23,7 @@
 	nav {
 		display: flex;
 		justify-content: space-between; /* Pushes links to left, profile to right */
-		align-items: center;
+		align-items: center; 
 	}
 
 	div {
@@ -34,25 +34,25 @@
 	/* Rectangle styling for links */
 	div a {
 		text-decoration: none;
-		color: black;
+		color: var(--text);
 		padding: 0.5rem 1rem;
 		display: inline-block;
 	}
 
 	div a:hover {
-		background-color: #d0d0d0;
+		background-color: var(--bg-active);
 	}
 
 	/* Circle styling for profile button */
-	.profile-btn {
+	.profile {
 		width: 40px;
 		height: 40px;
 		border-radius: 50%;
 		background-color: #555;
 		display: inline-block;
 	}
-
-	.profile-btn:hover {
+	
+	.profile:hover {
 		background-color: #333;
 	}
 </style>
