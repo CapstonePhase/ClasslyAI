@@ -101,11 +101,6 @@
 		currentPage = Math.max(0, Math.min(page, totalPages - 1));
 	}
 
-	function handlePageSizeChange(e: Event) {
-		pageSize = Number((e.target as HTMLSelectElement).value);
-		currentPage = 0;
-	}
-
 	function handleDropdownChange(value: string) {
 		pageSize = Number(value);
 		currentPage = 0;
