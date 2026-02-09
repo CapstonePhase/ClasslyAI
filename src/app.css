@@ -1,113 +1,110 @@
-/* --- Primitive Tokens --- */
-
-/* --- Semantic Tokens --- */
+/* ===== Design Tokens ===== */
 :root {
-	/* --- font tokens (primitive & adjustable) --- */
-	--font-family: system-ui, -apple-system, 'Segoe UI', Roboto --font-size: 16px;
-
-
-	/* --- color tokens (primitive & adjustable) --- */
-	--bg: white;
-	--bg-active: lightgrey;
-	--bg-aside: #e8f0ff;
-	--bg-profile: blue;
-	--bg-card: lightblue;
-	--bg-navbar: rgba(121, 29, 167, 0.688);
-
-	--transition-speed: 300ms;
-	--nav-width: 5rem;
-	--nav-hover-width: 16rem;
-	--text-muted: rgba(255, 255, 255, 0.7);
-	--icon-primary: #ff7eee;
-	--icon-secondary: #df49a6;
-
-	--text: #0f172a;
-	--text-muted: #d4deeb;
-	--accent: #2563eb;
-
-	--surface: rgba(14, 67, 192, 0.04);
-	--border: rgba(15, 23, 42, 0.08);
-
-	/* Card tokens (semantic & adjustable) */
-	--card-bg: #f8fbff;
-	--bg-card: var(--card-bg);
-	--card-foreground: #071024;
-	--card-accent: var(--accent);
-	--card-border-color: rgba(15, 23, 42, 0.06);
-	--card-border-width: 1px;
-	/* Special card border: diagonal gradient (pink -> blue) */
-	--border-card: linear-gradient(135deg, rgba(255, 209, 232, 1) 0%, rgba(207, 231, 255, 1) 100%);
-	--border-card-hover: linear-gradient(135deg, rgba(255, 209, 232, 1) 0%, rgba(160, 210, 255, 1) 100%);
-	--card-shadow: 0 8px 20px -8px rgba(15, 23, 42, 0.06);
-	--card-shadow-hover: 0 20px 40px -12px rgba(15, 23, 42, 0.09);
-	--shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
-
-	/* Layout tokens */
-	--header-height: 64px;
-	--aside-width: 240px;
-	--radius: 8px;
-	--gap: 1rem;
-}
-
-/* theme variants (class on <html> toggled by layout script) */
-html.dark {
-	--bg: #23232e;
-	--bg-navbar: #23232e;
-	--text: #ececec;
-	--text-muted: rgba(255, 255, 255, 0.7);
-	--icon-primary: #ff7eee;
-	--icon-secondary: #df49a6;
-}
-
-html.light {
-	--bg: #ffffff;
-	--bg-navbar: #ffffff;
-	--text: #1f1f1f;
-	--text-muted: rgba(0, 0, 0, 0.6);
-	--icon-primary: #ff7eee;
-	--icon-secondary: #df49a6;
-}
-
-html.solar {
-	--bg: #fdf6e3;
-	--bg-navbar: #f5e5b8;
-	--text: #35535c;
-	--text-muted: rgba(53, 83, 92, 0.85);
-	--icon-primary: #576e75;
-	--icon-secondary: #35535c;
-}
-html,
-body,
-#svelte,
-#contents { box-sizing: border-box; }
-*, *::before, *::after { box-sizing: inherit; }
-
-html,
-body,
-#svelte,
-#contents {
-	padding: 0;
-	height: 100%;
-	min-height: 100vh;
-	margin: 0;
-}
-
-body {
-	background: var(--bg);
-	color: var(--text);
+	/* Text */
+	font-size: 16px;
 	font-family:
 		system-ui,
 		-apple-system,
 		'Segoe UI',
 		Roboto,
 		'Helvetica Neue',
-		Arial;
-	-webkit-font-smoothing: antialiased;
-	line-height: 1.5;
+		Arial,
+		sans-serif;
+
+	/* Colors (streamlined palette) */
+	--bg: #ffffff;
+	--text: #0f172a;
+	--text-muted: #64748b;
+	--accent: #2563eb; /* primary blue */
+	--icon-primary: #7c3aed; /* complementary purple for icons */
+	--surface: rgba(14, 67, 192, 0.04);
+	--border: rgba(15, 23, 42, 0.08);
+
+	/* Nav */
+	--bg-navbar: rgba(255, 255, 255, 0.85);
+	--nav-width: 5rem;
+	--nav-hover-width: 16rem;
+	--transition-speed: 300ms;
+	--nav-link-hover: rgba(37, 99, 235, 0.08);
+
+	/* Card */
+	--card-bg: rgba(248, 251, 255, 0.8);
+	--card-foreground: #071024;
+	--border-card: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(203, 224, 255, 0.15));
+	--border-card-hover: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(137, 180, 255, 0.25));
+	--card-shadow: 0 8px 20px -8px rgba(15, 23, 42, 0.06);
+	--card-shadow-hover: 0 20px 40px -12px rgba(15, 23, 42, 0.09);
+
+	/* Layout */
+	--radius: 12px;
+	--gap: 1rem;
 }
 
+/* ===== Themes ===== */
+html.dark {
+	--bg: #0f172a;
+	--bg-navbar: rgba(15, 23, 42, 0.92);
+	--text: #e2e8f0;
+	--text-muted: rgba(226, 232, 240, 0.65);
+	--accent: #60a5fa;
+	--icon-primary: #ff7eee;
+	--surface: rgba(255, 255, 255, 0.03);
+	--border: rgba(255, 255, 255, 0.06);
+	--card-bg: rgba(17, 24, 39, 0.6);
+	--card-foreground: #e2e8f0;
+	--nav-link-hover: rgba(96, 165, 250, 0.12);
+	--border-card: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(96, 165, 250, 0.06));
+	--border-card-hover: linear-gradient(135deg, rgba(124, 58, 237, 0.14), rgba(96, 165, 250, 0.12));
+	--card-shadow: 0 10px 24px -10px rgba(2, 6, 23, 0.6);
+	--card-shadow-hover: 0 30px 60px -20px rgba(2, 6, 23, 0.7);
+}
+
+html.solar {
+	--bg: #fdf6e3;
+	--bg-navbar: rgba(245, 229, 184, 0.95);
+	--text: #35535c;
+	--text-muted: rgba(53, 83, 92, 0.65);
+	--accent: #b58900;
+	--icon-primary: #576e75;
+	--surface: rgba(245, 238, 216, 0.6);
+	--border: rgba(99, 77, 35, 0.08);
+	--card-bg: rgba(255, 250, 240, 0.9);
+	--card-foreground: #2f4750;
+	--nav-link-hover: rgba(181, 137, 0, 0.08);
+	--border-card: linear-gradient(135deg, rgba(213, 168, 60, 0.08), rgba(87, 110, 117, 0.04));
+	--border-card-hover: linear-gradient(135deg, rgba(213, 168, 60, 0.14), rgba(87, 110, 117, 0.08));
+	--card-shadow: 0 8px 20px -8px rgba(53, 83, 92, 0.04);
+	--card-shadow-hover: 0 20px 40px -12px rgba(53, 83, 92, 0.06);
+}
+
+/* ===== Reset ===== */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+html,
+body {
+	min-height: 100vh;
+	height: 100%;
+}
+
+body {
+	background: var(--bg);
+	color: var(--text);
+	-webkit-font-smoothing: antialiased;
+	line-height: 1.6;
+}
+
+/* Replacing ugly ah default scrollbar with custom */
 body::-webkit-scrollbar {
 	width: 0.25rem;
-
-
+}
+body::-webkit-scrollbar-track{
+	background: red;
+}
+body::-webkit-scrollbar-thumb{
+background: yellowgreen;
 }
