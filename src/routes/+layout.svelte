@@ -29,7 +29,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>Quizzes — ClasslyAI</title>
+	<title>classlyai</title>
 </svelte:head>
 
 <aside>
@@ -37,7 +37,7 @@
 		<ul>
 			{#each links as link (link.path)}
 				<li>
-					<a href={resolve(link.path as any)} aria-label={link.name}>
+					<a href={resolve(link.path)} aria-label={link.name}>
 						<Fa icon={link.icon} size="lg" />
 						<span>{link.name}</span>
 					</a>
@@ -95,7 +95,6 @@
 		display: flex;
 		flex-direction: column;
 	}
-
 	nav a,
 	footer .settings {
 		display: flex;
@@ -141,7 +140,7 @@
 
 	footer {
 		border-top: 1px solid var(--border);
-		padding: 0.25rem 0;
+		padding: 0;
 	}
 
 	main {
