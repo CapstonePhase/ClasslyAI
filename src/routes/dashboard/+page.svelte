@@ -1,15 +1,22 @@
 <script lang="ts">
+	import Icon from '$lib/components/Icon.svelte';
 	import AreaChart from '$lib/components/AreaChart.svelte';
+	import Table from '$lib/components/Table.svelte';
+	import StudentTableFilters from '$lib/components/StudentTableFilters.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
+
 	import biki from '$lib/assets/biki.jpg';
 	import owo from '$lib/assets/owo.jpg';
 	import red from '$lib/assets/red.jpg';
 	import tank from '$lib/assets/tank.jpg';
 	import water from '$lib/assets/water.jpg';
 	import jif from '$lib/assets/bwolfie.gif';
-	import Table from '$lib/components/Table.svelte';
-	import { SvelteSet } from 'svelte/reactivity';
 
-	// Sample data for the table
+	// ── Icon paths ──
+	const PLUS = 'M12 5v14M5 12h14';
+	const CLOSE = 'M18 6L6 18M6 6l12 12';
+
+	// ── Table config ──
 	const columns = [
 		{ key: 'name', label: 'Student Name' },
 		{ key: 'course', label: 'Course' },
@@ -73,7 +80,41 @@
 	const timeRanges = ['Last 7 days', 'Last 30 days', 'Last 3 months', 'Last 12 months'];
 	let selectedRange = $state('Last 7 days');
 
-	// --- Toolbar state ---
+	// --- To-Do state ---
+	interface Todo {
+		id: number;
+		text: string;
+		done: boolean;
+	}
+
+	let nextId = $state(7);
+	let newTodo = $state('');
+	let todos = $state<Todo[]>([
+		{ id: 1, text: 'get shit done', done: false },
+		{ id: 2, text: 'east sleep chode repeat', done: false },
+		{ id: 3, text: 'vishnu ko call', done: true },
+		{ id: 4, text: 'git commit', done: false },
+		{ id: 5, text: 'ek dsa kuch khub bhi paincho', done: false },
+		{ id: 6, text: 'ok ho gaya', done: true }
+	]);
+
+	const remaining = $derived(todos.filter((t) => !t.done).length);
+
+	function addTodo() {
+		const text = newTodo.trim();
+		if (!text) return;
+		todos = [{ id: nextId++, text, done: false }, ...todos];
+		newTodo = '';
+	}
+
+	function removeTodo(id: number) {
+		todos = todos.filter((t) => t.id !== id);
+	}
+	function clearCompleted() {
+		todos = todos.filter((t) => !t.done);
+	}
+
+	// ── Toolbar / filters ──
 	let statusFilter = $state('all');
 	let courseFilter = $state('all');
 	let searchQuery = $state('');
@@ -82,13 +123,9 @@
 
 	const filteredData = $derived.by(() => {
 		let result = tableData;
-
-		if (statusFilter !== 'all') {
+		if (statusFilter !== 'all')
 			result = result.filter((r) => r.status.toLowerCase() === statusFilter);
-		}
-		if (courseFilter !== 'all') {
-			result = result.filter((r) => r.course === courseFilter);
-		}
+		if (courseFilter !== 'all') result = result.filter((r) => r.course === courseFilter);
 		if (searchQuery.trim()) {
 			const q = searchQuery.toLowerCase();
 			result = result.filter(
@@ -98,345 +135,200 @@
 					r.grade.toLowerCase().includes(q)
 			);
 		}
-
 		return result;
 	});
 
-	// Column visibility
 	let hiddenColumns = new SvelteSet<string>();
 	let columnsOpen = $state(false);
-
 	const visibleColumns = $derived(columns.filter((c) => !hiddenColumns.has(c.key)));
 
 	function toggleColumn(key: string) {
-		if (hiddenColumns.has(key)) {
-			hiddenColumns.delete(key);
-		} else if (hiddenColumns.size < columns.length - 1) {
-			hiddenColumns.add(key);
-		}
+		if (hiddenColumns.has(key)) hiddenColumns.delete(key);
+		else if (hiddenColumns.size < columns.length - 1) hiddenColumns.add(key);
 	}
 
 	function handleClickOutside(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		if (!target.closest('details')) {
-			columnsOpen = false;
-		}
+		if (!(e.target as HTMLElement).closest('details')) columnsOpen = false;
 	}
 </script>
 
-<svelte:window onclick={handleClickOutside} />
-
 <!------ HTML ------>
 
-<div>header for dashboard</div>
+<svelte:window onclick={handleClickOutside} />
 
-<div id="container">
-	<div id="child"><img src={biki} alt="biki" /></div>
-	<div id="child"><img src={owo} alt="owo" /></div>
-	<div id="child"><img src={red} alt="red" /></div>
-	<div id="child"><img src={tank} alt="tank" /></div>
-	<div id="child"><img src={water} alt="water" /></div>
-	<div id="child"><img src={jif} alt="jif" /></div>
-	<div id="child">
-		<iframe
-			title="awsome songs from yt"
-			src="https://www.youtube.com/embed/w5VFOKKAbQQ?list=RDw5VFOKKAbQQ"
-			allow="autoplay; encrypted-media"
-			allowfullscreen
+<!-- Dashboard header -->
+<header class="section section-center hero dash-hero">
+	<h1>Your <em>Dashboard</em></h1>
+	<p class="subtitle">Overview of your classes, media, and tasks — all in one place.</p>
+</header>
+
+<div class="media-row">
+	<div class="media-grid">
+		{#each [biki, owo, red, tank, water, jif] as src, i (i)}
+			<div class="media-card"><img {src} alt="media-{i}" /></div>
+		{/each}
+		<div class="media-card">
+			<iframe
+				title="YouTube video player"
+				src="https://www.youtube-nocookie.com/embed/w5VFOKKAbQQ?list=RDw5VFOKKAbQQ"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen
+			></iframe>
+		</div>
+	</div>
+	<div class="data-card todo-card">
+		<div class="todo-header">
+			<strong>To-Do</strong>
+			<span class="text-muted todo-count">{remaining} remaining</span>
+		</div>
+		<form
+			class="todo-input"
+			onsubmit={(e) => {
+				e.preventDefault();
+				addTodo();
+			}}
 		>
-		</iframe>
+			<input class="input" type="text" placeholder="Add a task…" bind:value={newTodo} />
+			<button type="submit" class="icon-btn" aria-label="Add task" disabled={!newTodo.trim()}>
+				<Icon path={PLUS} size={16} />
+			</button>
+		</form>
+		<ul class="todo-list">
+			{#each todos as todo (todo.id)}
+				<li class:done={todo.done}>
+					<label class="todo-item">
+						<input type="checkbox" bind:checked={todo.done} />
+						<span>{todo.text}</span>
+					</label>
+					<button class="todo-remove" aria-label="Remove" onclick={() => removeTodo(todo.id)}>
+						<Icon path={CLOSE} />
+					</button>
+				</li>
+			{/each}
+		</ul>
+		{#if todos.some((t) => t.done)}
+			<div class="todo-footer">
+				<button class="btn btn-ghost" onclick={clearCompleted}>Clear completed</button>
+			</div>
+		{/if}
 	</div>
 </div>
 
 <AreaChart labels={chartLabels} datasets={chartDatasets} {timeRanges} bind:selectedRange />
 
-<form aria-labelledby="filters-legend">
-	<fieldset>
-		<label>
-			<select class="select" bind:value={statusFilter}>
-				<option value="all">All Status</option>
-				<option value="active">Active</option>
-				<option value="inactive">Inactive</option>
-			</select>
+<StudentTableFilters
+	bind:statusFilter
+	bind:courseFilter
+	bind:searchQuery
+	{courses}
+	{columns}
+	{hiddenColumns}
+	bind:columnsOpen
+	{toggleColumn}
+/>
 
-			<select class="select" bind:value={courseFilter}>
-				<option value="all">All Courses</option>
-				{#each courses as course (course)}
-					<option value={course}>{course}</option>
-				{/each}
-			</select>
-		</label>
-
-		<search>
-			<svg
-				width="14"
-				height="14"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-			>
-				<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
-			</svg>
-			<input type="search" placeholder="Search students..." bind:value={searchQuery} />
-		</search>
-
-		<menu>
-			<details>
-				<summary
-					class="btn btn-ghost"
-					onclick={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						columnsOpen = !columnsOpen;
-					}}
-				>
-					<svg
-						width="14"
-						height="14"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-					>
-						<rect x="3" y="3" width="7" height="18" rx="1" />
-						<rect x="14" y="3" width="7" height="18" rx="1" />
-					</svg>
-					Columns
-					<svg
-						width="10"
-						height="10"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-					>
-						<path d="M6 9l6 6 6-6" />
-					</svg>
-				</summary>
-
-				{#if columnsOpen}
-					<div>
-						{#each columns as col (col.key)}
-							<label>
-								<input
-									type="checkbox"
-									checked={!hiddenColumns.has(col.key)}
-									onchange={() => toggleColumn(col.key)}
-								/>
-								{col.label}
-							</label>
-						{/each}
-					</div>
-				{/if}
-			</details>
-
-			<button class="icon-btn" aria-label="Add student">
-				<svg
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M12 5v14M5 12h14" />
-				</svg>
-			</button>
-		</menu>
-	</fieldset>
-
-	<Table columns={visibleColumns} data={filteredData} selectable paginated pageSize={5}>
-		{#snippet cell({ column, value })}
-			{#if column.key === 'status'}
-				<span data-status class:active={value === 'Active'}>
-					<span></span>
-					{value}
-				</span>
-			{:else}
-				{value ?? ''}
-			{/if}
-		{/snippet}
-	</Table>
-</form>
+<Table columns={visibleColumns} data={filteredData} selectable paginated pageSize={5}>
+	{#snippet cell({ column, value })}
+		{#if column.key === 'status'}
+			<span class="badge" class:success={value === 'Active'} class:muted={value !== 'Active'}>
+				<span class="badge-dot"></span>
+				{value}
+			</span>
+		{:else}
+			{value ?? ''}
+		{/if}
+	{/snippet}
+</Table>
 
 <!------ /HTML ------>
 
 <style>
-	iframe {
-		height: 100%;
-		width: 100%;
+	/* Dashboard hero — compact */
+	.dash-hero {
+		padding-top: 2rem;
+		padding-bottom: 1.5rem;
 	}
 
-	#container {
+	/* Layout: media row */
+	.media-row {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		grid-template-columns: 2fr 1fr;
 		gap: var(--gap);
+		/* Remove fixed aspect-ratio to allow cards to determine height */
 	}
 
-	#child {
+	@media (max-width: 900px) {
+		.media-row {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Scroll strip overrides */
+	.media-grid {
+		display: flex;
+		gap: 0.5rem;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scroll-snap-type: x proximity;
+		scroll-behavior: smooth;
+		overscroll-behavior-x: contain;
+		padding: 0.5rem;
 		min-height: 200px;
-		overflow: hidden;
 	}
 
-	#child img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	/* Toolbar */
-	fieldset {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.75rem 1rem;
-		border: none;
-		border-bottom: 1px solid var(--border);
-		background: var(--card-bg);
-		border-radius: var(--radius) var(--radius) 0 0;
-	}
-
-	fieldset > label,
-	menu {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		flex-shrink: 0;
-	}
-
-	menu {
-		margin-left: auto;
-	}
-
-	/* Search */
-	search {
-		position: relative;
-		flex: 1;
-		max-width: 280px;
-	}
-
-	search svg {
-		position: absolute;
-		left: 0.6rem;
-		top: 50%;
-		transform: translateY(-50%);
-		color: var(--text-muted);
-		pointer-events: none;
-	}
-
-	search input {
-		width: 100%;
-		padding: 0.4rem 0.65rem 0.4rem 2rem;
-		font-size: 0.8rem;
-		color: var(--text);
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-		outline: none;
-		transition: border-color var(--transition-speed);
-	}
-
-	search input::placeholder {
-		color: var(--text-muted);
-	}
-
-	search input:focus {
-		border-color: var(--accent);
-		outline: 2px solid var(--accent);
-		outline-offset: 1px;
-	}
-
-	/* Columns dropdown */
-	details {
-		position: relative;
-		border: none;
-		padding: 0;
-	}
-
-	summary {
-		font-size: 0.8rem;
-		font-weight: 500;
-		padding: 0.4rem 0.75rem;
-		gap: 0.35rem;
-		list-style: none;
-	}
-
-	summary::-webkit-details-marker {
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.media-grid::-webkit-scrollbar {
 		display: none;
 	}
 
-	details > div {
-		position: absolute;
-		top: calc(100% + 4px);
-		right: 0;
-		z-index: 50;
-		min-width: 160px;
-		background: var(--card-bg);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-		padding: 0.35rem;
-		box-shadow: var(--card-shadow);
-		display: flex;
-		flex-direction: column;
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.media-grid {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
 	}
 
-	details label {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.4rem 0.6rem;
-		font-size: 0.8rem;
-		color: var(--text);
-		border-radius: 5px;
-		cursor: pointer;
-		transition: background-color var(--transition-speed);
-	}
-
-	details label:hover {
+	/* Media cards — sizing only */
+	.media-card {
+		flex: 0 0 280px;
+		height: 210px;
+		border-radius: var(--radius);
+		scroll-snap-align: start;
+		scroll-snap-stop: normal;
+		overflow: hidden;
 		background: var(--surface);
 	}
 
-	details input[type='checkbox'] {
-		width: 14px;
-		height: 14px;
-		accent-color: var(--accent);
-		cursor: pointer;
+	.media-card img,
+	.media-card iframe {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border: none;
 	}
 
-	/* Status badge */
-	[data-status] {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		font-size: 0.8rem;
-		color: var(--text-muted);
+	/* Todo card specific tweaks */
+	.todo-card {
+		display: flex;
+		flex-direction: column;
+		max-height: 400px;
 	}
 
-	[data-status] > span {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: var(--text-muted);
+	.todo-list {
+		flex: 1;
+		overflow-y: auto;
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
-	[data-status].active > span {
-		background: #22c55e;
-	}
-
-	[data-status].active {
-		color: var(--text);
-	}
-
-	/* Responsive */
 	@media (max-width: 640px) {
-		fieldset {
-			flex-wrap: wrap;
+		.media-card {
+			flex: 0 0 240px;
+			height: 180px;
 		}
-		search {
-			order: 3;
-			max-width: 100%;
-			flex-basis: 100%;
+
+		.todo-card {
+			max-height: none;
 		}
 	}
 </style>

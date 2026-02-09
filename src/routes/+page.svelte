@@ -31,8 +31,9 @@
 	];
 </script>
 
-<!-- Hero -->
-<section class="hero">
+<!------ HTML ------>
+
+<header class="section section-center hero">
 	<div class="hero-badge">
 		<Fa icon={faRobot} />
 		<span>Powered by Gemini</span>
@@ -42,123 +43,91 @@
 		ClasslyAI generates personalized study material, quizzes, and performance analytics — all driven
 		by AI so you can focus on actually learning.
 	</p>
-	<div class="hero-actions">
+	<nav>
 		<a href={resolve('/dashboard')} class="btn btn-primary">
 			Get Started
 			<Fa icon={faArrowRight} />
 		</a>
 		<a href={resolve('/about')} class="btn btn-ghost">Learn More</a>
-	</div>
-</section>
+	</nav>
+</header>
 
-<!-- Features -->
-<section class="features">
-	<h2>Everything you need to ace it</h2>
-	<div class="features-grid">
+<section class="section">
+	<h2 class="section-title">Everything you need to ace it</h2>
+	<div class="auto-grid">
 		<Card title="AI Study Material">
 			{#snippet content()}
-				<div class="feature-card-body">
-					<span class="feature-icon"><Fa icon={faBookOpen} size="lg" /></span>
-					<p>
-						Enter any topic and get curated notes, summaries, and key concepts generated instantly
-						by Gemini.
-					</p>
-				</div>
+				<span class="icon-accent"><Fa icon={faBookOpen} size="lg" /></span>
+				<p class="text-muted feature-text">
+					Enter any topic and get curated notes, summaries, and key concepts generated instantly by
+					Gemini.
+				</p>
 			{/snippet}
 		</Card>
 
 		<Card title="Smart Quizzes">
 			{#snippet content()}
-				<div class="feature-card-body">
-					<span class="feature-icon"><Fa icon={faClipboardQuestion} size="lg" /></span>
-					<p>
-						Auto-generated quizzes tailored to your study material. Multiple choice, short answer —
-						you name it.
-					</p>
-				</div>
+				<span class="icon-accent"><Fa icon={faClipboardQuestion} size="lg" /></span>
+				<p class="text-muted feature-text">
+					Auto-generated quizzes tailored to your study material. Multiple choice, short answer —
+					you name it.
+				</p>
 			{/snippet}
 		</Card>
 
 		<Card title="Performance Analytics">
 			{#snippet content()}
-				<div class="feature-card-body">
-					<span class="feature-icon"><Fa icon={faChartLine} size="lg" /></span>
-					<p>
-						Track your scores, spot weak areas, and watch your progress over time with clear visual
-						breakdowns.
-					</p>
-				</div>
+				<span class="icon-accent"><Fa icon={faChartLine} size="lg" /></span>
+				<p class="text-muted feature-text">
+					Track your scores, spot weak areas, and watch your progress over time with clear visual
+					breakdowns.
+				</p>
 			{/snippet}
 		</Card>
 	</div>
 </section>
 
-<!-- How it works -->
-<section class="how-it-works">
-	<h2>How it works</h2>
-	<ol class="steps">
+<section class="section">
+	<h2 class="section-title">How it works</h2>
+	<ol>
 		{#each steps as step, index (step.title)}
 			<li>
-				<span class="step-num">{index + 1}</span>
+				<span>{index + 1}</span>
 				<div>
 					<h3>{step.title}</h3>
-					<p>{step.description}</p>
+					<p class="text-muted">{step.description}</p>
 				</div>
 			</li>
 		{/each}
 	</ol>
 </section>
 
-<!-- CTA -->
-<section class="cta">
+<footer class="section section-center cta">
 	<Fa icon={faGraduationCap} size="2x" />
-	<h2>Ready to level up?</h2>
-	<p>Jump into your dashboard and start your first AI study session.</p>
+	<h2 class="section-title">Ready to level up?</h2>
+	<p class="text-muted">Jump into your dashboard and start your first AI study session.</p>
 	<a href={resolve('/dashboard')} class="btn btn-primary">
 		Open Dashboard
 		<Fa icon={faArrowRight} />
 	</a>
-</section>
+</footer>
+
+<!------ /HTML ------>
 
 <style>
-	/* Shared section centering */
-	.hero,
-	.features,
-	.how-it-works,
-	.cta {
-		max-width: 700px;
-		margin: 0 auto;
-		padding: 0 1rem;
-	}
-	.hero,
-	.cta {
-		text-align: center;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	.hero {
+	header {
 		padding-top: 4rem;
 		padding-bottom: 3rem;
 	}
+
 	.cta {
 		padding-top: 3rem;
 		padding-bottom: 4rem;
 		gap: 0.75rem;
 	}
 
-	section + section {
-		margin-top: 3.5rem;
-	}
-	h2 {
-		font-size: 1.5rem;
-		font-weight: 700;
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	/* Hero */
-	.hero-actions {
+	/* Hero nav */
+	header nav {
 		display: flex;
 		gap: 0.75rem;
 		margin-top: 2rem;
@@ -166,38 +135,27 @@
 		justify-content: center;
 	}
 
-	/* Features */
-	.features-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1.25rem;
-	}
-	.feature-card-body {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-	.feature-icon {
-		color: var(--icon-primary);
-	}
-	.feature-card-body p {
-		color: var(--text-muted);
+	/* Feature text spacing */
+	.feature-text {
+		margin-top: 0.5rem;
 		font-size: 0.92rem;
 	}
 
 	/* Steps */
-	.steps {
+	ol {
 		list-style: none;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
 	}
-	.steps li {
+
+	ol li {
 		display: flex;
 		gap: 1rem;
 	}
-	.step-num {
+
+	ol span {
 		width: 2.25rem;
 		height: 2.25rem;
 		flex-shrink: 0;
@@ -208,22 +166,17 @@
 		color: var(--accent);
 		font-weight: 700;
 	}
-	.steps h3 {
+
+	ol h3 {
 		font-weight: 600;
 	}
-	.steps p {
-		color: var(--text-muted);
-		font-size: 0.92rem;
-	}
 
-	/* CTA */
-	.cta :global(svg) {
+	/* CTA icon */
+	footer :global(svg) {
 		color: var(--icon-primary);
 	}
-	.cta h2 {
+
+	.cta :global(.section-title) {
 		margin-bottom: 0;
-	}
-	.cta p {
-		color: var(--text-muted);
 	}
 </style>

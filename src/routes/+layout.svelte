@@ -66,11 +66,14 @@
 		left: 0;
 		width: var(--nav-width);
 		height: 100vh;
+
 		display: flex;
 		flex-direction: column;
+
 		background: var(--bg-navbar);
 		backdrop-filter: blur(12px);
 		border-right: 1px solid var(--border);
+
 		z-index: 100;
 		transition: width var(--transition-speed);
 		overflow: hidden;
@@ -92,17 +95,20 @@
 		list-style: none;
 		padding: 0.5rem 0;
 		margin: 0;
+
 		display: flex;
 		flex-direction: column;
 	}
 	nav a,
 	footer .settings {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
 		height: 3.25rem;
 		width: 100%;
+		gap: 1rem;
 		padding: 0 1.5rem;
+
+		display: flex;
+		align-items: center;
+
 		color: var(--text-muted);
 		text-decoration: none;
 		background: transparent;
@@ -139,8 +145,8 @@
 	}
 
 	footer {
-		border-top: 1px solid var(--border);
 		padding: 0;
+		border-top: 1px solid var(--border);
 	}
 
 	main {
@@ -154,6 +160,7 @@
 			bottom: 0;
 			width: 100vw;
 			height: auto;
+
 			flex-direction: row;
 			border-right: none;
 			border-top: 1px solid var(--border);
@@ -166,11 +173,12 @@
 			justify-content: space-around;
 		}
 		nav a {
-			flex-direction: column;
-			justify-content: center;
 			height: 3.5rem;
 			padding: 0.25rem;
 			gap: 0.2rem;
+
+			flex-direction: column;
+			justify-content: center;
 			font-size: 0.7rem;
 		}
 		span {

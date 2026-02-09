@@ -202,7 +202,9 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
+		gap: 1rem;
 		margin-bottom: 1.25rem;
+		flex-wrap: wrap;
 	}
 
 	.chart-title {

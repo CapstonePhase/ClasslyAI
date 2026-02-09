@@ -30,7 +30,7 @@
 </script>
 
 <!-- Hero -->
-<section class="hero">
+<section class="section section-center hero">
 	<div class="hero-badge">
 		<Fa icon={faGraduationCap} />
 		<span>About ClasslyAI</span>
@@ -43,9 +43,9 @@
 </section>
 
 <!-- Mission -->
-<section class="mission">
-	<h2>Our mission</h2>
-	<p>
+<section class="section mission">
+	<h2 class="section-title">Our mission</h2>
+	<p class="text-muted mission-body">
 		Education shouldn't depend on expensive tutors or one-size-fits-all textbooks. We're building an
 		AI study companion that adapts to <em>you</em> — your pace, your topics, your goals — and makes high-quality
 		learning accessible to everyone.
@@ -53,15 +53,15 @@
 </section>
 
 <!-- Values -->
-<section class="values">
-	<h2>What we stand for</h2>
-	<div class="values-grid">
+<section class="section">
+	<h2 class="section-title">What we stand for</h2>
+	<div class="auto-grid">
 		{#each values as v (v.title)}
 			<Card title={v.title}>
 				{#snippet content()}
 					<div class="value-body">
-						<span class="value-icon"><Fa icon={v.icon} size="lg" /></span>
-						<p>{v.text}</p>
+						<span class="icon-accent"><Fa icon={v.icon} size="lg" /></span>
+						<p class="text-muted value-text">{v.text}</p>
 					</div>
 				{/snippet}
 			</Card>
@@ -70,9 +70,11 @@
 </section>
 
 <!-- CTA -->
-<section class="cta">
-	<h2>Ready to try it?</h2>
-	<p>Jump in and start your first AI-powered study session — it only takes a minute.</p>
+<section class="section section-center cta">
+	<h2 class="section-title">Ready to try it?</h2>
+	<p class="text-muted">
+		Jump in and start your first AI-powered study session — it only takes a minute.
+	</p>
 	<a href={resolve('/dashboard')} class="btn btn-primary">
 		Get Started
 		<Fa icon={faArrowRight} />
@@ -80,50 +82,25 @@
 </section>
 
 <style>
-	/* Shared section centering (mirrors home page) */
-	.hero,
-	.mission,
-	.values,
-	.cta {
-		max-width: 700px;
-		margin: 0 auto;
-		padding: 0 1rem;
-	}
-	.hero,
-	.cta {
-		text-align: center;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
 	.hero {
 		padding-top: 4rem;
 		padding-bottom: 3rem;
 	}
+
 	.cta {
 		padding-top: 3rem;
 		padding-bottom: 4rem;
 		gap: 0.75rem;
 	}
 
-	section + section {
-		margin-top: 3.5rem;
-	}
-	h2 {
-		font-size: 1.5rem;
-		font-weight: 700;
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
 	/* Mission */
-	.mission p {
-		color: var(--text-muted);
+	.mission-body {
 		line-height: 1.8;
 		text-align: center;
 		max-width: 560px;
 		margin: 0 auto;
 	}
+
 	.mission em {
 		font-style: normal;
 		color: var(--text);
@@ -131,26 +108,13 @@
 	}
 
 	/* Values */
-	.values-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1.25rem;
-	}
 	.value-body {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	.value-icon {
-		color: var(--icon-primary);
-	}
-	.value-body p {
-		color: var(--text-muted);
-		font-size: 0.92rem;
-	}
 
-	/* CTA */
-	.cta p {
-		color: var(--text-muted);
+	.value-text {
+		font-size: 0.92rem;
 	}
 </style>
