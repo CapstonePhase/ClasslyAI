@@ -1,23 +1,75 @@
-node_modules
+# Node
+node_modules/
 
-# Output
-.output
+# Gemini (testing artifacts)
+/.gemini/*
+
+# Build / Output
+/.svelte-kit/
+/.output/
+/build/
+/dist/
+/out/
+/public/build/
+
+# Deploy and hosting
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
-/build
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
 
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+.vite/
+.vite/*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files (keep examples/tests)
+.env
+.env.*
+!.env.example
+!.env.test
+.env.local
+.env.*.local
+
+# Caches and temporary
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# Coverage / test artifacts
+coverage/
+.nyc_output/
+playwright-report/
+cypress/videos/
+cypress/screenshots/
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Misc
+node-repl-history
+*.tgz
+*.gz
+*.zip
+
+# Keep lockfiles tracked (do not ignore): package-lock.json, yarn.lock, pnpm-lock.yaml
+
