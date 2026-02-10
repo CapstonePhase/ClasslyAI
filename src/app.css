@@ -512,6 +512,67 @@ details.dropdown .chev {
 	color: var(--text-muted);
 }
 
+/* ===== Menubar / Toolbar (shared) ===== */
+.menubar.toolbar {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	border: none;
+	background: none;
+	position: relative; /* used for absolute-centering search */
+	transition:
+		background-color var(--transition-speed),
+		box-shadow var(--transition-speed);
+}
+
+.menubar.toolbar:hover {
+	background: var(--surface);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 640px) {
+	.menubar.toolbar {
+		flex-wrap: wrap;
+		position: static; /* allow normal flow on small screens */
+	}
+}
+
+/* Search field styling used inside menubar toolbar */
+.search-field {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: min(280px, 60%);
+	max-width: 280px;
+}
+
+.search-field svg {
+	position: absolute;
+	left: 0.6rem;
+	top: 50%;
+	transform: translateY(-50%);
+	color: var(--text-muted);
+	pointer-events: none;
+}
+
+.search-field .input {
+	padding-left: 2rem;
+	font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+	.search-field {
+		position: static;
+		transform: none;
+		order: 3;
+		max-width: 100%;
+		flex-basis: 100%;
+		width: 100%;
+	}
+}
+
 /* ===== Alert ===== */
 .alert-error {
 	color: var(--danger-text);

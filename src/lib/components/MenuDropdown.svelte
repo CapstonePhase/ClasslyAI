@@ -15,9 +15,9 @@
 		ariaLabel?: string;
 		className?: string;
 		summary?: Snippet;
-		content?: Snippet<[{ handleItemClick?: (d: unknown) => void }]>;
+		content?: Snippet<[{ handleItemClick?: (d: any) => void }]>;
 		toggle?: (payload: { open: boolean }) => void;
-		select?: (detail: unknown) => void;
+		select?: (detail: any) => void;
 	} = $props();
 
 	let rootEl: HTMLElement | null = null;
@@ -31,7 +31,7 @@
 		if (rootEl) rootEl.dispatchEvent(new CustomEvent('toggle', { detail: { open } }));
 	}
 
-	function handleItemClick(detail?: unknown) {
+	function handleItemClick(detail?: any) {
 		select?.(detail);
 		if (rootEl) rootEl.dispatchEvent(new CustomEvent('select', { detail }));
 		open = false;

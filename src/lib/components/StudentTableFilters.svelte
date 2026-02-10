@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
 	import MenuBar from './MenuBar.svelte';
-
 	interface Column {
 		key: string;
 		label: string;
@@ -35,11 +34,11 @@
 </script>
 
 <MenuBar ariaLabelledby="filters-legend" className="toolbar">
-	{#snippet legend()}
+	<div slot="legend">
 		<span>Student table filters</span>
-	{/snippet}
+	</div>
 
-	{#snippet content()}
+	<div>
 		<label class="filter-group">
 			<select class="select" bind:value={statusFilter}>
 				<option value="all">All Status</option>
@@ -72,9 +71,9 @@
 				bind:value={searchQuery}
 			/>
 		</search>
-	{/snippet}
+	</div>
 
-	{#snippet actions()}
+	<div slot="actions">
 		<details class="dropdown" bind:open={columnsOpen}>
 			<summary
 				class="btn btn-ghost"
@@ -113,60 +112,14 @@
 		<button class="icon-btn" aria-label="Add student">
 			<Icon path={PLUS} size={16} />
 		</button>
-	{/snippet}
+	</div>
 </MenuBar>
 
 <style>
-	/* Toolbar */
-	:global(.menubar.toolbar) {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.75rem 1rem;
-		border: none;
-		background: none;
-	}
-
-	@media (max-width: 640px) {
-		:global(.menubar.toolbar) {
-			flex-wrap: wrap;
-		}
-	}
-
-	/* Filter group */
+	/* Filter group: component-local rule */
 	.filter-group {
 		display: contents;
 	}
 
-	/* Search field */
-	search.search-field {
-		position: relative;
-		flex: 1;
-		max-width: 280px;
-	}
-
-	search.search-field svg {
-		position: absolute;
-		left: 0.6rem;
-		top: 50%;
-		transform: translateY(-50%);
-		color: var(--text-muted);
-		pointer-events: none;
-	}
-
-	search.search-field .input {
-		padding-left: 2rem;
-		font-size: 0.8rem;
-	}
-
-	@media (max-width: 640px) {
-		search.search-field {
-			order: 3;
-			max-width: 100%;
-			flex-basis: 100%;
-		}
-	}
-
-	/* Dropdown styles now live in `app.css` to keep them consistent across components.
-	   Keep only small, component-specific styles here (if needed). */
+	/* Dropdown styles live in `app.css` — keep this file focused on structure only. */
 </style>

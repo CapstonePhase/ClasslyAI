@@ -1,40 +1,41 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-
+	// Svelte 5: use runes and snippets. Accept snippet props instead of slots.
 	let {
-		className = '',
+		class: classAttr,
+		className: classNameProp,
 		role = 'toolbar',
-		ariaLabel = undefined,
-		ariaLabelledby = undefined,
-		legend = undefined,
-		content = undefined,
-		actions = undefined
-	}: {
-		className?: string;
-		role?: string;
-		ariaLabel?: string;
-		ariaLabelledby?: string;
-		legend?: Snippet;
-		content?: Snippet;
-		actions?: Snippet;
+		ariaLabel,
+		ariaLabelledby,
+		enhance,
+		method = 'GET',
+		action = '',
+		children,
+		actions,
+		legend
 	} = $props();
+
+	let classes = $derived([classAttr, classNameProp, 'menubar', 'toolbar'].filter(Boolean).join(' '));
+
 </script>
 
 <form
-	class={`menubar ${className} toolbar`}
+	class={classes}
 	{role}
 	aria-label={ariaLabel}
 	aria-labelledby={ariaLabelledby}
+	{method}
+	{action}
+	use:enhance={enhance}
 >
-	{#if legend}
-		<div id={ariaLabelledby} class="menubar-legend">{@render legend()}</div>
+	{#if ariaLabelledby}
+		<div id={ariaLabelledby} class="menubar-legend">{@render legend?.()}</div>
 	{/if}
 
 	<div class="content">
-		{#if content}{@render content()}{/if}
+		{@render children?.()}
 	</div>
 	<div class="actions">
-		{#if actions}{@render actions()}{/if}
+		{@render actions?.()}
 	</div>
 </form>
 
