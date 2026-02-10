@@ -1,0 +1,47 @@
+import { json, error } from '@sveltejs/kit';
+import { generateText } from '$lib/server/gemini';
+import type { RequestHandler } from './$types';
+
+let lastCallTime = 0;
+const MIN_INTERVAL_MS = 10_000;
+
+export const POST: RequestHandler = async ({ request }) => {
+	const now = Date.now();
+	if (now - lastCallTime < MIN_INTERVAL_MS) {
+		error(429, 'Too many requests. Please wait before trying again.');
+	}
+	lastCallTime = now;
+
+	const body = await request.json();
+	const topic = body.topic;
+
+	if (!topic || typeof topic !== 'string') {
+		error(400, 'Missing required field: topic');
+	}
+
+	const prompt = `You are an expert tutor. Generate a concise but thorough study guide about "${topic}".
+Include:
+- A brief overview (2-3 sentences)
+- 4-6 key concepts, each with a title and explanation
+- 3 important takeaways
+
+Return ONLY valid JSON in this exact format:
+{
+  "topic": "${topic}",
+  "overview": "...",
+  "concepts": [
+    { "title": "...", "explanation": "..." }
+  ],
+  "takeaways": ["...", "...", "..."]
+}`;
+
+	try {
+		const data = await generateText(prompt);
+		const cleaned = data.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
+		const parsed = JSON.parse(cleaned);
+		return json({ success: true, data: parsed });
+	} catch (err) {
+		console.error('Gemini generate error:', err);
+		error(500, 'Failed to generate study material');
+	}
+};
