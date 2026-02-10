@@ -7,14 +7,23 @@
 	import Fa from 'svelte-fa';
 	import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 
-	import biki from '$lib/assets/biki.jpg';
-	import owo from '$lib/assets/owo.jpg';
-	import red from '$lib/assets/red.jpg';
-	import tank from '$lib/assets/tank.jpg';
-	import water from '$lib/assets/water.jpg';
-	import jif from '$lib/assets/bwolfie.gif';
-	import wall from '$lib/assets/wall.jpg';
-	import laila from '$lib/assets/laila.webp';
+	// Media assets are imported automatically from the `src/lib/assets` folder using a Vite glob
+	// Supported types: jpg, jpeg, png, gif, webp See `mediaAssets` initialization below.
+
+	interface MediaAsset {
+		type: 'img' | 'youtube';
+		src: string;
+		captions?: string; // optional VTT file path or data URL (not used when type === 'img')
+	}
+
+	// Build `mediaAssets` automatically from all files in `src/lib/assets`
+	const assetModules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,gif,webp}', {
+		eager: true,
+		as: 'url'
+	}) as Record<string, string>;
+	const mediaAssets: MediaAsset[] = Object.entries(assetModules)
+		.sort(([a], [b]) => a.localeCompare(b))
+		.map(([_, url]) => ({ type: 'img', src: url }));
 
 	// ── Icon paths ──
 	const PLUS = 'M12 5v14M5 12h14';
@@ -173,8 +182,21 @@
 <div class="section-wide dashboard-content">
 	<div class="media-row">
 		<div class="media-grid">
-			{#each [biki, owo, red, tank, water, jif, wall, laila] as src, i (i)}
-				<div class="media-card"><img {src} alt="media-{i}" /></div>
+			{#each mediaAssets as asset, i (i)}
+				<div class="media-card">
+					{#if asset.type === 'img'}
+						<img src={asset.src} alt={`media-${i}`} />
+					{:else if asset.type === 'youtube'}
+						<iframe
+							title="YouTube video player"
+							src={asset.src}
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowfullscreen
+							loading="lazy"
+							referrerpolicy="strict-origin-when-cross-origin"
+						></iframe>
+					{/if}
+				</div>
 			{/each}
 			<div class="media-card">
 				<iframe
