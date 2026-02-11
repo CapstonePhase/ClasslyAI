@@ -1,29 +1,48 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import Icon from '$lib/components/Icon.svelte';
 	import AreaChart from '$lib/components/AreaChart.svelte';
 	import Table from '$lib/components/Table.svelte';
 	import StudentTableFilters from '$lib/components/StudentTableFilters.svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+
 	import Fa from 'svelte-fa';
 	import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
+	import Gallery from '$lib/components/Gallery.svelte';
 
 	// Media assets are imported automatically from the `src/lib/assets` folder using a Vite glob
 	// Supported types: jpg, jpeg, png, gif, webp See `mediaAssets` initialization below.
 
-	interface MediaAsset {
-		type: 'img' | 'youtube';
-		src: string;
-		captions?: string; // optional VTT file path or data URL (not used when type === 'img')
-	}
+	// __ Galley Imports __
 
-	// Build `mediaAssets` automatically from all files in `src/lib/assets`
-	const assetModules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,gif,webp}', {
-		eager: true,
-		as: 'url'
-	}) as Record<string, string>;
-	const mediaAssets: MediaAsset[] = Object.entries(assetModules)
-		.sort(([a], [b]) => a.localeCompare(b))
-		.map(([_, url]) => ({ type: 'img', src: url }));
+	const modules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,webp,gif}', {
+		as: 'url',
+		eager: true
+	});
+	const media = Object.entries(modules)
+		.sort(([left], [right]) => left.localeCompare(right))
+		.map(([, url]) => url);
+
+	let tall = new SvelteSet(); // indexes for tall items (0-based)
+	let long = new SvelteSet();
+
+	onMount(async () => {
+		const portrait = new SvelteSet();
+		const landscape = new SvelteSet();
+		await Promise.all(
+			media.map(async (src, index) => {
+				const img = new Image();
+				img.src = src;
+				await img.decode().catch(() => {});
+				if (img.naturalHeight > img.naturalWidth * 1.2) portrait.add(index);
+				else if (img.naturalWidth > img.naturalHeight * 1.2) landscape.add(index);
+			})
+		);
+		tall.clear();
+		for (const index of portrait) tall.add(index);
+		long.clear();
+		for (const index of landscape) long.add(index);
+	});
 
 	// ── Icon paths ──
 	const PLUS = 'M12 5v14M5 12h14';
@@ -181,34 +200,10 @@
 
 <div class="section-wide dashboard-content">
 	<div class="media-row">
-		<div class="media-grid">
-			{#each mediaAssets as asset, i (i)}
-				<div class="media-card">
-					{#if asset.type === 'img'}
-						<img src={asset.src} alt={`media-${i}`} />
-					{:else if asset.type === 'youtube'}
-						<iframe
-							title="YouTube video player"
-							src={asset.src}
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							allowfullscreen
-							loading="lazy"
-							referrerpolicy="strict-origin-when-cross-origin"
-						></iframe>
-					{/if}
-				</div>
-			{/each}
-			<div class="media-card">
-				<iframe
-					title="YouTube video player"
-					src="https://www.youtube-nocookie.com/embed/w5VFOKKAbQQ?list=RDw5VFOKKAbQQ"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-					allowfullscreen
-					loading="lazy"
-					referrerpolicy="strict-origin-when-cross-origin"
-				></iframe>
-			</div>
+		<div class="container">
+			<Gallery />
 		</div>
+
 		<div class="data-card todo-card">
 			<div class="todo-header">
 				<strong>To-Do</strong>
@@ -285,7 +280,9 @@
 		gap: var(--gap);
 		padding-bottom: 4rem;
 	}
-
+	.container {
+		height: 100px;
+	}
 	.table-section {
 		display: flex;
 		flex-direction: column;
@@ -307,45 +304,6 @@
 	}
 
 	/* Scroll strip overrides */
-	.media-grid {
-		padding: 0.5rem;
-		gap: 0.5rem;
-
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		height: 440px;
-		overflow-y: auto;
-	}
-
-	/* Hide scrollbar for Chrome, Safari and Opera */
-	.media-grid::-webkit-scrollbar {
-		display: none;
-	}
-
-	/* Hide scrollbar for IE, Edge and Firefox */
-	.media-grid {
-		-ms-overflow-style: none; /* IE and Edge */
-		scrollbar-width: none; /* Firefox */
-	}
-
-	/* Media cards — sizing only */
-	.media-card {
-		flex: 0 0 280px;
-		height: 210px;
-		border-radius: var(--radius);
-		scroll-snap-align: start;
-		scroll-snap-stop: normal;
-		overflow: hidden;
-		background: var(--surface);
-	}
-
-	.media-card img,
-	.media-card iframe {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		border: none;
-	}
 
 	/* ===== Todo card ===== */
 	.todo-card {
@@ -471,18 +429,5 @@
 		justify-content: flex-end;
 		padding: 0.5rem 0.75rem;
 		border-top: 1px solid var(--border);
-	}
-
-	@media (max-width: 640px) {
-		.media-card {
-			flex: 0 0 240px;
-			height: 180px;
-		}
-
-		.media-grid,
-		.todo-card {
-			height: auto;
-			max-height: 500px;
-		}
 	}
 </style>
