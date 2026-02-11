@@ -2,16 +2,16 @@
 	// Svelte 5: use runes and snippets. Accept snippet props instead of slots.
 	let {
 		class: classAttr,
-		className: classNameProp,
+		className: classNameProp = '',
 		role = 'toolbar',
-		ariaLabel,
-		ariaLabelledby,
-		enhance,
+		ariaLabel = '',
+		ariaLabelledby = '',
+		enhance = undefined,
 		method = 'GET',
 		action = '',
-		children,
-		actions,
-		legend
+		children = undefined,
+		actions = undefined,
+		legend = undefined
 	} = $props();
 
 	let classes = $derived(

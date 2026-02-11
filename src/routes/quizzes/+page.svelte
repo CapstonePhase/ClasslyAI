@@ -6,7 +6,7 @@
 	import MenuBar from '$lib/components/MenuBar.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import Table from '$lib/components/Table.svelte';
-	import { faClipboardQuestion, faClock, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import { faClock } from '@fortawesome/free-solid-svg-icons';
 	import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
@@ -71,13 +71,6 @@
 		{ topic: 'Organic Chemistry', score: 3, total: 3, date: '2 days ago' },
 		{ topic: 'Shakespeare', score: 2, total: 3, date: '3 days ago' }
 	]);
-
-	function scoreClass(s: number, total: number): string {
-		const pct = (s / total) * 100;
-		if (pct >= 80) return 'good';
-		if (pct >= 50) return 'okay';
-		return 'poor';
-	}
 
 	// Add to history on submit
 	$effect(() => {
@@ -148,7 +141,7 @@
 	</header>
 
 	<MenuBar method="POST" action="?/generate" enhance={handleEnhance} class="generate-form">
-		<div slot="content">
+		{#snippet children()}
 			<input
 				name="topic"
 				type="text"
@@ -157,13 +150,15 @@
 				required
 				disabled={loading}
 			/>
-		</div>
-		<div slot="actions">
-			<button type="submit" class="btn btn-primary" disabled={loading}>
-				{loading ? 'Generating…' : 'Generate Quiz'}
-				<Icon path={faArrowRight.iconName ? faArrowRight.iconName : PLUS} size={14} />
-			</button>
-		</div>
+		{/snippet}
+
+		{#snippet actions()}
+			<div>
+				<button type="submit" class="btn btn-primary" disabled={loading}>
+					{#if loading}Generating…{:else}Generate Quiz{/if}
+				</button>
+			</div>
+		{/snippet}
 	</MenuBar>
 
 	{#if error}

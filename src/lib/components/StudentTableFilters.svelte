@@ -33,55 +33,28 @@
 	const PLUS = 'M12 5v14M5 12h14';
 </script>
 
-<MenuBar ariaLabelledby="filters-legend" className="toolbar">
-	<div slot="legend">
-		<span>Student table filters</span>
-	</div>
+<MenuBar ariaLabelledby="filters-legend" class="toolbar">
+	{#snippet legend()}
+		<span id="filters-legend">Student table filters</span>
+	{/snippet}
 
-	<div>
-		<label class="filter-group">
-			<select class="select" bind:value={statusFilter}>
-				<option value="all">All Status</option>
-				<option value="active">Active</option>
-				<option value="inactive">Inactive</option>
-			</select>
-			<select class="select" bind:value={courseFilter}>
-				<option value="all">All Courses</option>
-				{#each courses as course (course)}
-					<option value={course}>{course}</option>
-				{/each}
-			</select>
-		</label>
+	{#snippet children()}
+		<div>
+			<label class="filter-group">
+				<select class="select" bind:value={statusFilter}>
+					<option value="all">All Status</option>
+					<option value="active">Active</option>
+					<option value="inactive">Inactive</option>
+				</select>
+				<select class="select" bind:value={courseFilter}>
+					<option value="all">All Courses</option>
+					{#each courses as course}
+						<option value={course}>{course}</option>
+					{/each}
+				</select>
+			</label>
 
-		<search class="search-field">
-			<svg
-				width="14"
-				height="14"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-			>
-				<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
-			</svg>
-			<input
-				class="input"
-				type="search"
-				placeholder="Search students..."
-				bind:value={searchQuery}
-			/>
-		</search>
-	</div>
-
-	<div slot="actions">
-		<details class="dropdown" bind:open={columnsOpen}>
-			<summary
-				class="btn btn-ghost"
-				onclick={(e) => {
-					e.preventDefault();
-					columnsOpen = !columnsOpen;
-				}}
-			>
+			<search class="search-field">
 				<svg
 					width="14"
 					height="14"
@@ -90,11 +63,23 @@
 					stroke="currentColor"
 					stroke-width="2"
 				>
-					<rect x="3" y="3" width="7" height="18" rx="1" />
-					<rect x="14" y="3" width="7" height="18" rx="1" />
+					<circle cx="11" cy="11" r="8" />
+					<path d="m21 21-4.3-4.3" />
 				</svg>
-				Columns
-				<Icon path={CHEVRON} size={10} />
+				<input
+					class="input"
+					type="search"
+					placeholder="Search students..."
+					bind:value={searchQuery}
+				/>
+			</search>
+		</div>
+	{/snippet}
+
+	{#snippet actions()}
+		<details class="dropdown" bind:open={columnsOpen}>
+			<summary class="btn btn-ghost">
+				Columns <Icon path={CHEVRON} size={10} />
 			</summary>
 			<div class="dropdown-panel">
 				{#each columns as col (col.key)}
@@ -103,16 +88,13 @@
 							type="checkbox"
 							checked={!hiddenColumns.has(col.key)}
 							onchange={() => toggleColumn?.(col.key)}
-						/>
-						{col.label}
+						/>{col.label}
 					</label>
 				{/each}
 			</div>
 		</details>
-		<button class="icon-btn" aria-label="Add student">
-			<Icon path={PLUS} size={16} />
-		</button>
-	</div>
+		<button class="icon-btn" aria-label="Add student"><Icon path={PLUS} size={16} /></button>
+	{/snippet}
 </MenuBar>
 
 <style>
