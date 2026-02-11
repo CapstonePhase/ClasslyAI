@@ -1,6 +1,6 @@
-import { fail } from '@sveltejs/kit';
-import { generateJSON } from '$lib/server/gemini';
-import type { Actions } from './$types';
+// import { fail } from '@sveltejs/kit';
+// import { generateJSON } from '$lib/server/gemini';
+// import type { Actions } from './$types';
 
 export interface QuizQuestion {
 	question: string;
@@ -9,10 +9,10 @@ export interface QuizQuestion {
 }
 
 // Server-side rate limiter — blocks rapid-fire calls regardless of what the browser does
-let lastGenerateTime = 0;
-const MIN_INTERVAL_MS = 10_000; // at least 10 seconds between API calls
+// let lastGenerateTime = 0;
+//const MIN_INTERVAL_MS = 10_000; // at least 10 seconds between API calls
 
-export const actions = {
+/* export const actions = {
 	generate: async ({ request }) => {
 		const now = Date.now();
 		if (now - lastGenerateTime < MIN_INTERVAL_MS) {
@@ -44,7 +44,7 @@ Return ONLY valid JSON in this exact format:
   }
 ]`;
 
-		try {
+		 try {
 			const quizData = await generateJSON<QuizQuestion[]>(prompt);
 			return { success: true, quizData, topic };
 		} catch (err) {
@@ -97,3 +97,4 @@ Return ONLY valid JSON in this exact format:
 		}
 	}
 } satisfies Actions;
+*/

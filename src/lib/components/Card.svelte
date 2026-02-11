@@ -1,53 +1,79 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-
-	let { title, content }: { title: string; content: Snippet } = $props();
+	let { children, preset = 'default' } = $props();
 </script>
 
-<article>
-	{#if title}<h3>{title}</h3>{/if}
-
-	<div>
-		{@render content()}
-	</div>
-</article>
+<div class="card" data-preset={preset}>
+	{@render children()}
+</div>
 
 <style>
-	article {
-		background:
-			linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-			var(--border-card) border-box;
-		border: 1px solid transparent;
-		border-radius: var(--radius);
-		box-shadow: var(--card-shadow);
+	.card {
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		color: var(--color-text);
+		padding: 1rem;
+		border-radius: var(--radius-base);
+		box-shadow: var(--shadow-card);
 		transition:
 			box-shadow var(--transition-speed),
 			transform var(--transition-speed);
-		flex: 1;
-		min-width: 200px;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
 	}
-	article:hover {
-		background:
-			linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-			var(--border-card-hover) border-box;
-		box-shadow: var(--card-shadow-hover);
+
+	.card:hover {
+		box-shadow: var(--shadow-card-hover);
 		transform: translateY(-2px);
 	}
 
-	h3 {
-		margin: 0;
-		padding: var(--gap) var(--gap) 0.5rem;
-		font-weight: 600;
-		color: var(--card-foreground);
-		border-bottom: 1px solid var(--border);
+	/* Preset variations */
+	.card[data-preset='compact'] {
+		padding: 0.5rem;
+		font-size: 0.9rem;
 	}
 
-	div {
-		padding: var(--gap);
-		color: var(--card-foreground);
-		flex: 1;
+	.card[data-preset='featured'] {
+		border-color: var(--color-accent);
+		padding: 2rem;
+		box-shadow: var(--shadow-card-hover);
+	}
+	.card[data-preset='media'] {
+		border: none;
+		padding: none;
+		background: transparent;
+		box-shadow: none;
+		overflow: hidden;
+	}
+
+	.card[data-preset='background'] {
+		padding: 0;
+		min-height: 180px;
+		background-size: cover;
+		background-position: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-text-muted);
+		overflow: hidden;
+	}
+
+	.card[data-preset='todo'] {
+		display: flex;
+		flex-direction: column;
+		/* allow the card to stretch to the available space and let internal content scroll */
+		min-height: 0;
+		flex: 1 1 auto;
+		overflow: hidden;
+	}
+
+	@keyframes cardEntrance {
+		from {
+			opacity: 0;
+			transform: scale(0.3);
+			filter: hue-rotate(180deg);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+			filter: hue-rotate(0deg);
+		}
 	}
 </style>

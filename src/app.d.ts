@@ -3,6 +3,8 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
+	type Theme = 'light' | 'dark' | 'forest';
+
 	namespace App {
 		interface Link {
 			name: string;
@@ -17,30 +19,3 @@ declare global {
 		// interface Platform {}
 	}
 }
-
-declare module '*.png' {
-	const value: string;
-	export default value;
-}
-
-declare module '*.jpg' {
-	const value: string;
-	export default value;
-}
-
-declare module '*.jpeg' {
-	const value: string;
-	export default value;
-}
-
-declare module '*.svg' {
-	const value: string;
-	export default value;
-}
-
-declare module '*.gif' {
-	const value: string;
-	export default value;
-}
-
-export {};

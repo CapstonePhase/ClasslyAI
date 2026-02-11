@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	// import { onMount } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import Icon from '$lib/components/Icon.svelte';
 	import AreaChart from '$lib/components/AreaChart.svelte';
@@ -9,40 +9,12 @@
 	import Fa from 'svelte-fa';
 	import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 	import Gallery from '$lib/components/Gallery.svelte';
+	import Card from '$lib/components/Card.svelte';
 
 	// Media assets are imported automatically from the `src/lib/assets` folder using a Vite glob
 	// Supported types: jpg, jpeg, png, gif, webp See `mediaAssets` initialization below.
 
-	// __ Galley Imports __
-
-	const modules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,webp,gif}', {
-		as: 'url',
-		eager: true
-	});
-	const media = Object.entries(modules)
-		.sort(([left], [right]) => left.localeCompare(right))
-		.map(([, url]) => url);
-
-	let tall = new SvelteSet(); // indexes for tall items (0-based)
-	let long = new SvelteSet();
-
-	onMount(async () => {
-		const portrait = new SvelteSet();
-		const landscape = new SvelteSet();
-		await Promise.all(
-			media.map(async (src, index) => {
-				const img = new Image();
-				img.src = src;
-				await img.decode().catch(() => {});
-				if (img.naturalHeight > img.naturalWidth * 1.2) portrait.add(index);
-				else if (img.naturalWidth > img.naturalHeight * 1.2) landscape.add(index);
-			})
-		);
-		tall.clear();
-		for (const index of portrait) tall.add(index);
-		long.clear();
-		for (const index of landscape) long.add(index);
-	});
+	// Gallery measurement is handled inside the <Gallery /> component now.
 
 	// ── Icon paths ──
 	const PLUS = 'M12 5v14M5 12h14';
@@ -184,11 +156,10 @@
 	}
 </script>
 
-<!------ HTML ------>
+<!---- html ---->
 
 <svelte:window onclick={handleClickOutside} />
 
-<!-- Dashboard header -->
 <header class="section section-center hero dash-hero">
 	<div class="hero-badge">
 		<Fa icon={faTachometerAlt} />
@@ -198,13 +169,11 @@
 	<p class="subtitle">Overview of your classes, media, and tasks — all in one place.</p>
 </header>
 
-<div class="section-wide dashboard-content">
+<section class="section-wide dashboard-content">
 	<div class="media-row">
-		<div class="container">
-			<Gallery />
-		</div>
+		<Gallery />
 
-		<div class="data-card todo-card">
+		<Card preset="todo">
 			<div class="todo-header">
 				<strong>To-Do</strong>
 				<span class="text-muted todo-count">{remaining} remaining</span>
@@ -239,7 +208,7 @@
 					<button class="btn btn-ghost" onclick={clearCompleted}>Clear completed</button>
 				</div>
 			{/if}
-		</div>
+		</Card>
 	</div>
 
 	<AreaChart labels={chartLabels} datasets={chartDatasets} {timeRanges} bind:selectedRange />
@@ -269,7 +238,7 @@
 			{/snippet}
 		</Table>
 	</div>
-</div>
+</section>
 
 <!------ /HTML ------>
 
@@ -280,9 +249,6 @@
 		gap: var(--gap);
 		padding-bottom: 4rem;
 	}
-	.container {
-		height: 100px;
-	}
 	.table-section {
 		display: flex;
 		flex-direction: column;
@@ -292,26 +258,30 @@
 	/* Layout: media row */
 	.media-row {
 		display: grid;
-		grid-template-columns: 2fr 1fr;
+		grid-template-columns: minmax(0, 1fr) 360px; /* main area + sidebar */
 		gap: var(--gap);
-		/* Remove fixed aspect-ratio to allow cards to determine height */
+		align-items: stretch;
+		align-content: start;
+		grid-auto-rows: 1fr; /* helps matching heights when parent has a constrained height */
+		/* Constrain the media row so internal areas scroll instead of growing the page */
+		max-height: var(--media-row-max-height, calc(100vh - 260px));
+	}
+
+	/* Ensure direct children can shrink and scroll internally */
+	.media-row > * {
+		min-height: 180;
+		display: flex;
+		flex-direction: column;
 	}
 
 	@media (max-width: 900px) {
 		.media-row {
 			grid-template-columns: 1fr;
+			max-height: none;
 		}
 	}
 
 	/* Scroll strip overrides */
-
-	/* ===== Todo card ===== */
-	.todo-card {
-		display: flex;
-		flex-direction: column;
-		height: 440px;
-		overflow: hidden;
-	}
 
 	.todo-header {
 		display: flex;

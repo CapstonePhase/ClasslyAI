@@ -60,6 +60,9 @@
 <!------ /HTML ------>
 
 <style>
+	* {
+		--nav-width: 5rem;
+	}
 	aside {
 		position: fixed;
 		top: 0;
@@ -70,9 +73,9 @@
 		display: flex;
 		flex-direction: column;
 
-		background: var(--bg-navbar);
+		background: var(--color-surface);
 		backdrop-filter: blur(12px);
-		border-right: 1px solid var(--border);
+		border-right: 1px solid var(--color-border);
 
 		z-index: 100;
 		transition: width var(--transition-speed);
