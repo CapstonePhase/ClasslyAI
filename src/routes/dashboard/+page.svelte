@@ -200,7 +200,10 @@
 
 <div class="section-wide dashboard-content">
 	<div class="media-row">
-		<Gallery />
+		<div class="container">
+			<Gallery />
+		</div>
+
 		<div class="data-card todo-card">
 			<div class="todo-header">
 				<strong>To-Do</strong>
@@ -277,7 +280,9 @@
 		gap: var(--gap);
 		padding-bottom: 4rem;
 	}
-
+	.container {
+		height: 100px;
+	}
 	.table-section {
 		display: flex;
 		flex-direction: column;
