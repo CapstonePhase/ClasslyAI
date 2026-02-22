@@ -73,20 +73,21 @@
 	}
 	.sidebar {
 		position: fixed;
-		background-color: var(--bg-primary);
-		transition: width var(--transition-speed) ease;
+		background-color: var(--bg);
+		transition: width var(--speed) ease;
 		overflow: none;
-
+		z-index: 10;
 		position: fixed;
-		background-color: var(--color-surface);
 		display: grid;
 		grid-template-rows: auto 1fr auto;
+		border-right: 1px solid var(--text-muted);
 	}
 	.sidebar ul,
 	li,
 	a,
 	div {
 		height: 4rem;
+		text-decoration: none;
 	}
 	.sidebar a,
 	div {
@@ -98,15 +99,16 @@
 
 	.sidebar a:hover,
 	div:hover {
-		color: var(--color-accent-hover);
+		color: var(--text-muted);
 	}
 	.sidebar a.active {
-		color: var(--color-accent);
+		color: var(--text-muted);
 	}
 	.sidebar a,
 	div {
-		color: var(--color-text);
+		color: var(--text);
 	}
+
 	.settings {
 		font-weight: bold;
 	}
@@ -116,12 +118,12 @@
 	}
 	.logo:hover :global(.icon) {
 		transform: rotate(0deg);
-		transition: transform var(--transition-speed);
+		transition: transform var(--speed);
 	}
 
 	.sidebar:hover .logo :global(.icon) {
 		transform: rotate(-120deg);
-		transition: transform var(--transition-speed);
+		transition: transform var(--speed);
 	}
 
 	@media only screen and (max-width: 600px) {

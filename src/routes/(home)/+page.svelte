@@ -148,8 +148,8 @@
 	}
 
 	.step-num {
-		background: var(--color-surface-soft);
-		color: var(--color-accent);
+		background: var(--bg);
+		color: var(--text);
 		width: 3rem;
 		height: 3rem;
 		display: flex;
@@ -157,6 +157,6 @@
 		justify-content: center;
 		border-radius: 50%;
 		font-weight: 700;
-		border: 2px solid var(--color-accent);
+		border: 2px solid var(--text-muted);
 	}
 </style>

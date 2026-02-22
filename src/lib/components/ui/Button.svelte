@@ -11,7 +11,6 @@
 		variant?: 'default' | 'outline' | 'ghost' | 'link';
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		disabled?: boolean;
-		href?: string;
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
@@ -26,26 +25,29 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: var(--radius-base);
+		border-radius: var(--radius);
 		font-weight: 500;
 		cursor: pointer;
-		transition: all var(--transition-speed);
+		transition: all var(--speed);
 		border: 1px solid transparent;
 	}
 
 	/* Variant logic stays here, not in app.css */
 	.btn[data-variant='default'] {
-		background: var(--color-accent);
-		color: white;
+		background: var(--bg);
+		color: var(--text-muted);
+	}
+	.btn[data-variant='default']:hover {
+		color: var(--text);
 	}
 	.btn[data-variant='outline'] {
 		background: transparent;
-		border-color: var(--color-border);
-		color: var(--color-text);
+		border-color: var(--text-muted);
+		color: var(--text);
 	}
 	.btn[data-variant='outline']:hover {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
+		border-color: var(--text);
+		color: var(--text);
 	}
 
 	/* Size logic */

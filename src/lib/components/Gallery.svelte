@@ -72,16 +72,16 @@
 	.item {
 		position: relative;
 		overflow: hidden;
-		border-radius: var(--radius-base);
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: none;
+		border: 1px solid var(--text-muted);
 	}
 
 	img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.3s ease;
+		transition: transform var(--speed) ease;
 		display: block;
 		/* Removes bottom spacing */
 	}
@@ -95,10 +95,10 @@
 		align-items: center;
 		justify-content: center;
 		flex: 1;
-		background: var(--color-bg);
-		border: 2px dashed var(--color-border);
-		border-radius: var(--radius-base);
-		color: var(--color-text-muted);
+		background: var(--bg-front);
+		border: 2px dashed var(--text-muted);
+		border-radius: var(--radius);
+		color: var(--text-muted);
 		text-align: center;
 		padding: 2rem;
 	}

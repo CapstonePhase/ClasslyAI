@@ -70,7 +70,7 @@
 		<div class="actions">
 			<Button variant="outline" size="lg">
 				Export
-				<Icon icon={faDownload} />
+				<Icon icon={faDownload}/>
 			</Button>
 		</div>
 	{/snippet}
@@ -80,7 +80,7 @@
 	<div class="workspace-grid">
 		<div class="workspace-card">
 			<div class="card-header">
-				<Icon icon={faListCheck} size="1.2rem" color="var(--color-accent)" />
+				<Icon icon={faListCheck} size="1.2rem" color="var(--text)" />
 				<h3>Priorities</h3>
 			</div>
 			<div class="card-content">
@@ -129,15 +129,15 @@
 	}
 
 	.workspace-card {
-		background: var(--color-surface, #fff);
-		border: 1px solid var(--color-border, #eee);
+		background: var(--bg);
+		border: 1px solid var(--text-muted);
 		border-radius: 1rem;
 		padding: 1.5rem;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		height: 400px; /* Fixed height for consistency */
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+		box-shadow: 0 4px 6px -1px var(--shadow);
 	}
 
 	.card-header {

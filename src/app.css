@@ -5,38 +5,29 @@
 
 /* --- Light Mode (Default) --- */
 :root {
-	--color-bg: #ffffff;
-	--color-surface: #f8fafc; /* Slate 50 */
-	--color-surface-hover: #f1f5f9; /* Slate 100 */
-
-	--color-text: #0f172a; /* Slate 900 */
-	--color-text-muted: #64748b; /* Slate 500 */
-
-	--color-accent: #3b82f6; /* Blue 500 */
-	--color-accent-hover: #2563eb; /* Blue 600 */
-
-	--color-border: #e2e8f0; /* Slate 200 */
-	--shadow-card: 0 4px 12px rgba(2, 6, 23, 0.08);
-
-	--radius-base: 8px;
-	--radius-lg: 12px;
-	--transition-speed: 0.2s; /* Slightly slower for smoother color shifts */
+	--bg-back: hsl(0 0% 80%);
+	--bg: hsl(0 0% 85%);
+	--bg-front: hsl(0 0% 90%);
+	--text: hsl(0 0% 5%);
+	--text-muted: hsl(0 0% 30%);
+	--shadow: hsl(0 0% 50%);
+	--text-accent: hsl(0, 100%, 50%);
+	
+	--radius: 2rem;
+	--radius-large: 4rem;
+	--speed: 180ms;
+	--icon-size: 2rem;
+	--fonts: 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* --- Dark Mode Overrides --- */
 :root[data-theme='dark'] {
-	--color-bg: #0f172a; /* Slate 900 */
-	--color-surface: #1e293b; /* Slate 800 */
-	--color-surface-hover: #334155; /* Slate 700 */
-
-	--color-text: #f8fafc; /* Slate 50 */
-	--color-text-muted: #94a3b8; /* Slate 400 */
-
-	--color-accent: #60a5fa; /* Blue 400 (Lighter for dark bg) */
-	--color-accent-hover: #3b82f6; /* Blue 500 */
-
-	--color-border: #334155; /* Slate 700 */
-	--shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
+	--bg-back: hsl(0 0% 10%);
+	--bg: hsl(0, 0%, 15%);
+	--bg-front: hsl(0 0% 20%);
+	--text: hsl(0 0% 95%);
+	--text-muted: hsl(0 0% 70%);
+	--shadow: hsl(0 0% 5%);
 }
 
 /* 2. Global Resets */
@@ -54,12 +45,12 @@ body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	background-color: var(--color-bg);
-	color: var(--color-text);
-	font-family: var(--font-family);
+	background-color: var(--bg-back);
+	color: var(--text);
+	font-family: var(--fonts);
 	transition:
-		background-color var(--transition-speed),
-		color var(--transition-speed);
+		background-color var(--speed),
+		color var(--speed);
 }
 /* Awsome scrollbaR */
 body::-webkit-scrollbar {
@@ -67,11 +58,11 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-	background: var(--color-surface);
+	background: var(--bg);
 }
 
 body::-webkit-scrollbar-thumb {
-	background: var(--color-border);
+	background: var(--bg-front);
 }
 header,
 footer,

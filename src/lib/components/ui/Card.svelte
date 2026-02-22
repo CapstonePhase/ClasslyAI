@@ -18,15 +18,16 @@
 
 <style>
 	.card {
-		padding: 1.5rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-base);
-		transition: transform 0.2s;
+		display: inline;
+		padding: 2rem;
+		background: var(--bg);
+		border: 1px solid var(--text-muted);
+		border-radius: var(--radius);
+		transition: transform var(--speed);
 	}
 
 	.card[data-preset='notched'] {
-		border-left: 4px solid var(--accent, var(--color-accent));
+		border-bottom: 4px solid var(--text-muted);
 	}
 
 	.card[data-preset='flat'] {
@@ -36,6 +37,6 @@
 
 	.card:hover {
 		transform: translateY(-2px);
-		box-shadow: var(--shadow-card-hover);
+		box-shadow: 0 4px 6px -1px var(--shadow);
 	}
 </style>

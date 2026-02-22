@@ -46,7 +46,6 @@
 		max-width: 800px;
 		font-size: 1.25rem;
 		line-height: 1.6;
-		color: var(--color-text-muted);
 		text-align: center;
 	}
 

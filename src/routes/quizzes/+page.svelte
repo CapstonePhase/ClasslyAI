@@ -113,7 +113,7 @@
 		: 'ClasslyAI generates personalized study material, quizzes, and performance analytics — all driven by AI.'}
 >
 	{#snippet badge()}
-		<Icon icon={faPodcast} size="1.2rem" color="var(--color-accent)" />
+		<Icon icon={faPodcast} size="1.2rem" color="var(--text)" />
 		<span>Level up</span>
 	{/snippet}
 </PageHeader>
@@ -254,14 +254,14 @@
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem;
-		border: 1px solid var(--color-border, #e5e7eb);
+		border: 1px solid var(--text-muted);
 		border-radius: 0.5rem;
 		cursor: pointer;
 		transition: background-color 0.2s;
 	}
 
 	.option-label:hover {
-		background-color: var(--color-bg-hover, #f9fafb);
+		background-color: var(--bg-front);
 	}
 
 	.form-actions {
@@ -288,7 +288,7 @@
 	.result-details {
 		margin-top: 1rem;
 		padding-top: 1rem;
-		border-top: 1px solid var(--color-border, #e5e7eb);
+		border-top: 1px solid var(--text-muted);
 		font-size: 0.9rem;
 	}
 
@@ -299,9 +299,9 @@
 	}
 
 	.text-error {
-		color: var(--color-error, #ef4444);
+		color: red;
 	}
 	.text-success {
-		color: var(--color-success, #22c55e);
+		color: green;
 	}
 </style>
