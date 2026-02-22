@@ -1,62 +1,77 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { untrack } from 'svelte';
+	import { onMount } from 'svelte';
+	import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
-	type Theme = 'light' | 'dark' | 'solar';
+	let theme = $state<'light' | 'dark'>('light');
 
-	const THEMES: Theme[] = ['light', 'dark', 'solar'];
-	const THEME_ICONS: Record<Theme, string> = {
-		light: '☀️',
-		dark: '🌙',
-		solar: '🌤️'
-	};
+	onMount(() => {
+		// 1. Check LocalStorage OR System Preference on load
+		const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
+		const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
-	let theme = $state<Theme>(getTheme());
-
-	/** Determine initial theme from localStorage / system preference (SSR-safe). */
-	function getTheme(): Theme {
-		if (!browser) return 'light';
-		const stored = localStorage.getItem('theme');
-		if (stored === 'dark' || stored === 'light' || stored === 'solar') return stored;
-		if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-		return 'light';
-	}
-
-	// Sync DOM class + localStorage whenever theme changes (browser-only)
-	$effect(() => {
-		if (!browser) return;
-
-		const current = theme; // track `theme`
-
-		untrack(() => {
-			const root = document.documentElement;
-			root.classList.remove('dark', 'solar');
-			if (current !== 'light') {
-				root.classList.add(current);
-			}
-			localStorage.setItem('theme', current);
-		});
+		theme = saved || system;
+		applyTheme(theme);
 	});
 
-	function toggleTheme(): void {
-		const i = THEMES.indexOf(theme);
-		theme = THEMES[(i + 1) % THEMES.length];
+	function applyTheme(newTheme: 'light' | 'dark') {
+		// Update HTML attribute for CSS
+		document.documentElement.setAttribute('data-theme', newTheme);
+		// Save preference
+		localStorage.setItem('theme', newTheme);
+	}
+
+	function toggle() {
+		theme = theme === 'light' ? 'dark' : 'light';
+		applyTheme(theme);
 	}
 </script>
 
-<button class="theme-toggle" aria-label="Toggle color theme ({theme})" onclick={toggleTheme}>
-	{THEME_ICONS[theme]}
+<button onclick={toggle} aria-label="Toggle Dark Mode" class="theme-toggle">
+	<div class="icon-container" data-show={theme === 'light'}>
+		<Fa icon={faSun} size="lg" />
+	</div>
+	<div class="icon-container" data-show={theme === 'dark'}>
+		<Fa icon={faMoon} size="lg" />
+	</div>
 </button>
 
 <style>
 	.theme-toggle {
-		font: inherit;
-		background: none;
-		border: none;
+		width: 1.2rem;
+		height: 1.2rem;
+		background: var(--color-surface);
+		border: 0px none var(--color-border);
+		color: var(--color-text);
+		border-radius: var(--radius-base);
 		cursor: pointer;
-		margin-left: auto;
-		padding: 0;
-		font-size: 1.1rem;
-		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		transition: all var(--transition-speed);
+	}
+
+	.theme-toggle:hover {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.icon-container {
+		position: absolute;
+		transition:
+			transform 0.3s ease,
+			opacity 0.3s ease;
+	}
+
+	/* Animation Logic: Rotate and fade based on state */
+	[data-show='true'] {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+
+	[data-show='false'] {
+		opacity: 0;
+		transform: rotate(90deg) scale(0.5);
 	}
 </style>

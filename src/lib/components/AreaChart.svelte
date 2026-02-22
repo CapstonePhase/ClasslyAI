@@ -1,279 +1,183 @@
 <script lang="ts">
-	interface Dataset {
+	interface ChartDataset {
 		label: string;
-		values: number[];
+		data: number[];
 		color?: string;
-		opacity?: number;
-	}
-
-	interface Props {
-		title?: string;
-		subtitle?: string;
-		labels: string[];
-		datasets: Dataset[];
-		timeRanges?: string[];
-		selectedRange?: string;
-		onrangechange?: (range: string) => void;
-		height?: number;
 	}
 
 	let {
-		title = 'Total Visitors',
-		subtitle = 'Total for the last 3 months',
-		labels,
-		datasets,
-		timeRanges = [],
-		selectedRange = $bindable(''),
-		onrangechange,
-		height = 280
-	}: Props = $props();
+		labels = [],
+		datasets = [],
+		height = 300,
+		showGrid = true
+	}: {
+		labels: string[];
+		datasets: ChartDataset[];
+		height?: number;
+		showGrid?: boolean;
+	} = $props();
 
-	const padding = { top: 20, right: 20, bottom: 40, left: 20 };
-
-	let containerWidth = $state(600);
-	let containerEl: HTMLDivElement | undefined = $state();
-
-	$effect(() => {
-		if (!containerEl) return;
-		const observer = new ResizeObserver((entries) => {
-			containerWidth = entries[0].contentRect.width;
-		});
-		observer.observe(containerEl);
-		return () => observer.disconnect();
+	// Calculate Max Value with a buffer so the top line isn't stuck to the ceiling
+	let maxValue = $derived.by(() => {
+		const max = Math.max(...datasets.flatMap((d) => d.data), 10);
+		return Math.ceil(max * 1.05); // Add 5% headroom
 	});
 
-	const chartWidth = $derived(containerWidth - padding.left - padding.right);
-	const chartHeight = $derived(height - padding.top - padding.bottom);
+	// Generate the line path (stroke)
+	function getLinePath(values: number[]) {
+		if (values.length === 0) return '';
+		const stepX = 100 / (values.length - 1);
 
-	const maxValue = $derived(Math.max(...datasets.flatMap((d) => d.values)) * 1.15);
-
-	function scaleX(index: number, total: number): number {
-		return (index / (total - 1)) * chartWidth;
+		return values
+			.map((val, i) => {
+				const x = i * stepX;
+				const y = 100 - (val / maxValue) * 100;
+				return `${x},${y}`;
+			})
+			.join(' L ');
 	}
 
-	function scaleY(value: number): number {
-		return chartHeight - (value / maxValue) * chartHeight;
-	}
-
-	/** Compute control points for a smooth cubic Bézier spline */
-	function smoothPath(values: number[]): string {
-		const points = values.map((v, i) => ({
-			x: scaleX(i, values.length),
-			y: scaleY(v)
-		}));
-
-		if (points.length < 2) return '';
-
-		let d = `M ${points[0].x},${points[0].y}`;
-
-		for (let i = 0; i < points.length - 1; i++) {
-			const p0 = points[Math.max(i - 1, 0)];
-			const p1 = points[i];
-			const p2 = points[i + 1];
-			const p3 = points[Math.min(i + 2, points.length - 1)];
-
-			const tension = 0.35;
-			const cp1x = p1.x + (p2.x - p0.x) * tension;
-			const cp1y = p1.y + (p2.y - p0.y) * tension;
-			const cp2x = p2.x - (p3.x - p1.x) * tension;
-			const cp2y = p2.y - (p3.y - p1.y) * tension;
-
-			d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
-		}
-
-		return d;
-	}
-
-	function areaPath(values: number[]): string {
-		const line = smoothPath(values);
-		const lastX = scaleX(values.length - 1, values.length);
-		return `${line} L ${lastX},${chartHeight} L 0,${chartHeight} Z`;
-	}
-
-	const gridLines = $derived(Array.from({ length: 4 }, (_, i) => (chartHeight / 4) * (i + 1)));
-
-	const defaultColors = ['var(--accent)', 'var(--icon)'];
-
-	function handleRangeChange(e: Event) {
-		const target = e.target as HTMLSelectElement;
-		selectedRange = target.value;
-		onrangechange?.(target.value);
+	// Generate the area path (fill)
+	function getAreaPath(values: number[]) {
+		if (values.length === 0) return '';
+		const linePath = getLinePath(values).replaceAll('L', 'L'); // Format consistency
+		return `M 0,100 L ${linePath} L 100,100 Z`;
 	}
 </script>
 
-<div class="data-card chart-card" bind:this={containerEl}>
-	<div class="chart-header">
-		<div class="chart-title-group">
-			{#if title}
-				<h3 class="chart-title">{title}</h3>
-			{/if}
-			{#if subtitle}
-				<p class="chart-subtitle">{subtitle}</p>
-			{/if}
-		</div>
-		{#if timeRanges.length > 0}
-			<select class="select range-select" value={selectedRange} onchange={handleRangeChange}>
-				{#each timeRanges as range (range)}
-					<option value={range}>{range}</option>
-				{/each}
-			</select>
-		{/if}
+<div class="chart-card" style:height="{height}px">
+	<div class="y-axis">
+		<span>{maxValue}</span>
+		<span>{Math.round(maxValue / 2)}</span>
+		<span>0</span>
 	</div>
 
-	<svg width="100%" {height} viewBox="0 0 {containerWidth} {height}" preserveAspectRatio="none">
-		<defs>
-			{#each datasets as dataset, i (dataset.label)}
-				<linearGradient id="gradient-{i}" x1="0" y1="0" x2="0" y2="1">
-					<stop
-						offset="0%"
-						stop-color={dataset.color ?? defaultColors[i % defaultColors.length]}
-						stop-opacity={dataset.opacity ?? 0.35}
-					/>
-					<stop
-						offset="100%"
-						stop-color={dataset.color ?? defaultColors[i % defaultColors.length]}
-						stop-opacity={0.01}
-					/>
-				</linearGradient>
-			{/each}
-		</defs>
+	<div class="chart-canvas">
+		{#if showGrid}
+			<div class="grid-lines">
+				<div class="line"></div>
+				<div class="line"></div>
+				<div class="line"></div>
+			</div>
+		{/if}
 
-		<g transform="translate({padding.left},{padding.top})">
-			<!-- Grid lines -->
-			{#each gridLines as y (y)}
-				<line x1={0} y1={y} x2={chartWidth} y2={y} class="grid-line" />
-			{/each}
+		<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+			<defs>
+				{#each datasets as ds, i (ds.label)}
+					<linearGradient id="gradient-{i}" x1="0" x2="0" y1="0" y2="1">
+						<stop offset="0%" stop-color={ds.color || 'var(--color-accent)'} stop-opacity="0.4" />
+						<stop offset="100%" stop-color={ds.color || 'var(--color-accent)'} stop-opacity="0" />
+					</linearGradient>
+				{/each}
+			</defs>
 
-			<!-- Area fills + lines (render in reverse so first dataset is on top) -->
-			{#each [...datasets].reverse() as dataset, ri (dataset.label)}
-				{@const i = datasets.length - 1 - ri}
-				<path d={areaPath(dataset.values)} fill="url(#gradient-{i})" class="area-fill" />
+			{#each datasets as ds, i (ds.label)}
+				<path d={getAreaPath(ds.data)} fill="url(#gradient-{i})" stroke="none" />
 				<path
-					d={smoothPath(dataset.values)}
+					d={`M ${getLinePath(ds.data)}`}
 					fill="none"
-					stroke={dataset.color ?? defaultColors[i % defaultColors.length]}
-					stroke-width="2"
-					class="area-line"
+					stroke={ds.color || 'var(--color-accent)'}
+					stroke-width="2px"
+					vector-effect="non-scaling-stroke"
+					stroke-linecap="round"
+					stroke-linejoin="round"
 				/>
 			{/each}
+		</svg>
 
-			<!-- X-axis labels -->
-			{#each labels as label, i (label)}
-				<text
-					x={scaleX(i, labels.length)}
-					y={chartHeight + 28}
-					class="axis-label"
-					text-anchor="middle"
-				>
+		<div class="x-axis">
+			{#each labels as label, i (i)}
+				<span class="x-label" style:left="{(i / (labels.length - 1)) * 100}%">
 					{label}
-				</text>
-			{/each}
-		</g>
-	</svg>
-
-	<!-- Legend -->
-	{#if datasets.length > 1}
-		<div class="chart-legend">
-			{#each datasets as dataset, i (dataset.label)}
-				<div class="legend-item">
-					<span
-						class="legend-dot"
-						style="background: {dataset.color ?? defaultColors[i % defaultColors.length]}"
-					></span>
-					<span class="legend-label">{dataset.label}</span>
-				</div>
+				</span>
 			{/each}
 		</div>
-	{/if}
+	</div>
 </div>
 
 <style>
 	.chart-card {
-		padding: 1.5rem;
-		box-shadow: var(--card-shadow);
-		transition: box-shadow var(--transition-speed);
-	}
-
-	.chart-card:hover {
-		box-shadow: var(--card-shadow-hover);
-	}
-
-	.chart-header {
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
+		width: 100%;
+		font-size: 0.75rem;
+		background-color: var(--color-surface); /* Card background */
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 1.5rem; /* Inner padding prevents clipping */
 		gap: 1rem;
-		margin-bottom: 1.25rem;
-		flex-wrap: wrap;
+		box-shadow: var(--shadow-card);
 	}
 
-	.chart-title {
-		font-size: 1.125rem;
-		font-weight: 700;
-		color: var(--text);
-		margin: 0;
+	.y-axis {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		color: var(--color-text-muted);
+		padding-bottom: 1.5rem; /* Space for x-axis */
+		font-variant-numeric: tabular-nums;
 	}
 
-	.chart-subtitle {
-		font-size: 0.8rem;
-		color: var(--text-muted);
-		margin: 0.2rem 0 0;
+	.chart-canvas {
+		flex: 1;
+		position: relative;
+		display: flex;
+		flex-direction: column;
 	}
 
-	.range-select {
-		border-radius: 8px;
-		padding: 0.4rem 2rem 0.4rem 0.75rem;
-		font-weight: 500;
-		background-position: right 0.6rem center;
+	/* Grid Lines Logic */
+	.grid-lines {
+		position: absolute;
+		inset: 0 0 1.5rem 0; /* Cover chart area, stop above x-axis */
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	.line {
+		width: 100%;
+		border-top: 1px dashed var(--color-border);
+		opacity: 0.6;
+	}
+	/* Add bottom border to the last line manually if needed, or rely on axis */
+	.line:last-child {
+		border-top: 1px solid var(--color-border);
+		/* Solid base line */
 	}
 
 	svg {
-		display: block;
+		flex: 1;
+		width: 100%;
+		height: 100%; /* Important */
 		overflow: visible;
+		/* Allows stroke to bleed slightly without clipping */
+		z-index: 1;
+		margin-bottom: 1.5rem; /* Space for x-axis labels */
 	}
 
-	.grid-line {
-		stroke: var(--border);
-		stroke-width: 1;
+	.x-axis {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 1rem;
+		pointer-events: none;
 	}
 
-	.area-fill {
-		transition: opacity var(--transition-speed);
+	.x-label {
+		position: absolute;
+		transform: translateX(-50%);
+		/* Center label on the point */
+		color: var(--color-text-muted);
+		white-space: nowrap;
 	}
 
-	.area-line {
-		transition: opacity var(--transition-speed);
+	/* Prevent first and last labels from going off-edge */
+	.x-label:first-child {
+		transform: translateX(0%);
 	}
-
-	.axis-label {
-		fill: var(--text-muted);
-		font-size: 0.75rem;
-		font-family: inherit;
-	}
-
-	.chart-legend {
-		display: flex;
-		justify-content: center;
-		gap: 1.5rem;
-		margin-top: 1rem;
-		padding-top: 0.75rem;
-		border-top: 1px solid var(--border);
-	}
-
-	.legend-item {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-	}
-
-	.legend-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-	}
-
-	.legend-label {
-		font-size: 0.8rem;
-		color: var(--text-muted);
+	.x-label:last-child {
+		transform: translateX(-100%);
 	}
 </style>

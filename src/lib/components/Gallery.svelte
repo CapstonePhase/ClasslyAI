@@ -1,105 +1,111 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
-	import Card from './Card.svelte';
 
-	// auto-import all images from the assets folder as URLs (eager, so available on mount)
-	const modules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,webp,gif}', {
-		as: 'url',
-		eager: true
-	});
-	const media = Object.entries(modules)
-		.sort(([left], [right]) => left.localeCompare(right))
-		.map(([, url]) => url);
+	// Svelte 5 Props
+	let { preset = 'default' }: { preset?: string } = $props();
 
-	let tall = new SvelteSet(); // indexes for tall items (0-based)
-	let long = new SvelteSet();
+	let media: string[] = $state([]);
+	let loading = $state(true);
 
-	onMount(async () => {
-		const portrait = new SvelteSet();
-		const landscape = new SvelteSet();
-		await Promise.all(
-			media.map(async (src, index) => {
-				const img = new Image();
-				img.src = src;
-				await img.decode().catch(() => {});
-				if (img.naturalHeight > img.naturalWidth * 1.2) portrait.add(index);
-				else if (img.naturalWidth > img.naturalHeight * 1.2) landscape.add(index);
-			})
-		);
-		tall.clear();
-		for (const index of portrait) tall.add(index);
-		long.clear();
-		for (const index of landscape) long.add(index);
+	onMount(() => {
+		// 1. GLOB IMPORT: specific pattern for Vite
+		// This looks for images in src/lib/assets/
+		const modules = import.meta.glob('$lib/assets/*.{jpg,jpeg,png,webp,gif}', {
+			eager: true,
+			query: '?url',
+			import: 'default'
+		}) as Record<string, string | { default: string }>;
+		console.log('Gallery Found Modules:', modules); // Check your console!
+
+		// No specific type needed here anymore; TypeScript infers it correctly!
+		media = Object.values(modules).map((mod) => {
+			return typeof mod === 'object' && mod !== null ? mod.default : mod;
+		});
+		loading = false;
 	});
 </script>
 
-<div class="gallery">
-	{#each media as src, index (src)}
-		<img {src} alt={`img${index}`} class:tall={tall.has(index)} class:long={long.has(index)} />
-	{/each}
+<div class="gallery-wrapper">
+	{#if loading}
+		<div class="empty-state">Loading gallery...</div>
+	{:else if media.length > 0}
+		<div class="gallery" data-preset={preset}>
+			{#each media as src, i (src)}
+				{#if typeof src === 'string'}
+					<div class="item">
+						<img {src} alt="Gallery item {i}" loading="lazy" />
+					</div>
+				{/if}
+			{/each}
+		</div>
+	{:else}
+		<div class="empty-state">
+			<div class="debug-info">
+				<p><strong>0 images found.</strong></p>
+				<small>Ensure images are located in: <code>src/lib/assets/</code></small>
+				<br />
+				<small>(Current path searched: <code>$lib/assets/</code>)</small>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
-	* {
-		--width: 180px;
+	.gallery-wrapper {
+		width: 100%;
+		height: 100%;
+		min-height: 400px; /* Prevents collapse */
+		display: flex;
+		flex-direction: column;
 	}
+
 	.gallery {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
-		grid-auto-rows: var(--width);
-		grid-auto-flow: row dense;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		grid-auto-rows: 150px;
 		gap: 1rem;
+		padding: 1rem;
+		width: 100%;
+		overflow-y: auto; /* Internal scrolling */
 	}
+
+	.item {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: none;
+		border: 1px solid var(--text-muted);
+	}
+
 	img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		border-radius: var(--radius-base);
-		transition:
-			transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-			filter 0.6s ease,
-			opacity 0.4s ease;
-		will-change: transform;
-
-		animation: imageFade 0.8s ease forwards;
-		opacity: 0;
+		transition: transform var(--speed) ease;
+		display: block;
+		/* Removes bottom spacing */
 	}
 
 	img:hover {
-		cursor: pointer;
 		transform: scale(1.05);
 	}
 
-	/* Subtle fade-in animation (opacity-only to avoid clashing with hover transforms) */
-	img {
+	.empty-state {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 1;
+		background: var(--bg-front);
+		border: 2px dashed var(--text-muted);
+		border-radius: var(--radius);
+		color: var(--text-muted);
+		text-align: center;
+		padding: 2rem;
 	}
 
-	@keyframes imageFade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	@keyframes galleryFade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	@media screen and (min-width: 600px) {
-		.tall {
-			grid-row: span 2;
-		}
-
-		.long {
-			grid-column: span 2;
-		}
+	.debug-info code {
+		background: rgba(0, 0, 0, 0.1);
+		padding: 2px 4px;
+		border-radius: 4px;
 	}
 </style>

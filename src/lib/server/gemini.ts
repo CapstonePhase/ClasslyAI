@@ -1,32 +1,78 @@
 import { env } from '$env/dynamic/private';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const MODEL = 'gemini-2.0-flash';
+import { GoogleGenAI } from '@google/genai';
 
 function getGemini() {
-	const key = env.GEMINI_API_KEY;
-	if (!key || key === 'your_key_here') {
+	const apiKey = env.GEMINI_API_KEY;
+	if (!apiKey) {
 		throw new Error('GEMINI_API_KEY is not set. Add it to your .env file.');
 	}
-	return new GoogleGenerativeAI(key);
+	return new GoogleGenAI({ apiKey });
 }
 
 /**
  * Send a prompt to Gemini and return the raw text response.
+ *
+ *
  */
-export async function generateText(prompt: string): Promise<string> {
+export async function generateText(
+	prompt: string,
+	opts?: { maxAttempts?: number; baseDelayMs?: number }
+): Promise<string> {
 	const gemini = getGemini();
-	const model = gemini.getGenerativeModel({ model: MODEL });
-	const result = await model.generateContent(prompt);
-	return result.response.text();
+	const model = env.GEMINI_MODEL ?? 'gemini-3-flash-preview';
+	const maxAttempts = opts?.maxAttempts ?? 5;
+	const baseDelay = opts?.baseDelayMs ?? 300; // ms
+	let attempt = 0;
+
+	function sleep(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
+	while (true) {
+		attempt++;
+		try {
+			const response = await gemini.models.generateContent({
+				model,
+				contents: prompt
+			});
+
+			if (!response.text) {
+				throw new Error('Gemini did not return a response');
+			}
+			return response.text;
+		} catch (err) {
+			const e = err as unknown as {
+				status?: number;
+				code?: number;
+				message?: string;
+				error?: { code?: number };
+			};
+			const retryable =
+				e?.status === 503 ||
+				e?.code === 503 ||
+				e?.message?.toString().toLowerCase().includes('high demand') ||
+				(e?.error && e.error.code === 503);
+
+			if (!retryable || attempt >= maxAttempts) {
+				throw err;
+			}
+
+			const jitter = Math.random() * 300;
+			const backoff = Math.pow(2, attempt - 1) * baseDelay + jitter;
+			console.warn(
+				`Gemini request failed (attempt ${attempt}/${maxAttempts}). Retrying in ${Math.round(backoff)}ms.`
+			);
+			await sleep(backoff);
+		}
+	}
 }
 
 /**
  * Send a prompt to Gemini and parse the response as JSON.
  * Strips markdown fences if Gemini wraps the output in ```json … ```.
  */
-export async function generateJSON<T = unknown>(prompt: string): Promise<T> {
+export async function generateJSON<JSON>(prompt: string): Promise<JSON> {
 	const text = await generateText(prompt);
 	const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
-	return JSON.parse(cleaned) as T;
+	return JSON.parse(cleaned);
 }

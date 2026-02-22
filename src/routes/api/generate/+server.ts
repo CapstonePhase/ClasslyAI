@@ -42,6 +42,10 @@ Return ONLY valid JSON in this exact format:
 		return json({ success: true, data: parsed });
 	} catch (err) {
 		console.error('Gemini generate error:', err);
-		error(500, 'Failed to generate study material');
+		const e = err as unknown as { status?: number; message?: string };
+		if (e?.status === 503 || e?.message?.toString().toLowerCase().includes('high demand')) {
+			throw error(503, 'Model is currently unavailable. Please try again later.');
+		}
+		throw error(500, 'Failed to generate study material');
 	}
 };

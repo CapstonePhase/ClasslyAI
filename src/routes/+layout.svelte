@@ -1,44 +1,46 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import type { Snippet } from 'svelte';
-
-	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
-
-	import { resolve } from '$app/paths';
-	import Fa from 'svelte-fa';
+	import Icon from '$lib/components/ui/Icon.svelte';
 	import {
 		faHome,
-		faInfoCircle,
 		faTachometerAlt,
 		faQuestionCircle,
-		faCog
+		faInfoCircle,
+		faCog,
+		faCloudMoonRain
 	} from '@fortawesome/free-solid-svg-icons';
+	import { page } from '$app/state';
 
-	const links: App.Link[] = [
-		{ name: 'Home', path: '/', icon: faHome },
-		{ name: 'Dashboard', path: '/dashboard', icon: faTachometerAlt },
-		{ name: 'Quizzes', path: '/quizzes', icon: faQuestionCircle },
-		{ name: 'About', path: '/about', icon: faInfoCircle }
-	];
-
+	import { resolve } from '$app/paths';
 	let { children }: { children: Snippet } = $props();
+
+	// 2. APPLY the global App.Link type here
+	const links: App.Link[] = [
+		{ name: 'Home', path: '/', icon: faHome, size: '2x' },
+		{ name: 'Dashboard', path: '/dashboard', icon: faTachometerAlt, size: '2x' },
+		{ name: 'Quizzes', path: '/quizzes', icon: faQuestionCircle, size: '2x' },
+		{ name: 'About', path: '/about', icon: faInfoCircle, size: '2x' }
+	];
 </script>
 
-<!------ HTML ------>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-	<title>classlyai</title>
-</svelte:head>
-
-<aside>
-	<nav aria-label="Navigation">
+<aside class="sidebar" role="navigation">
+	<header>
+		<ul>
+			<li>
+				<div class="logo">
+					<Icon icon={faCog} size="2x" />
+					<span>ClasslyAI</span>
+				</div>
+			</li>
+		</ul>
+	</header>
+	<nav>
 		<ul>
 			{#each links as link (link.path)}
 				<li>
-					<a href={resolve(link.path)} aria-label={link.name}>
-						<Fa icon={link.icon} size="lg" />
+					<a href={resolve(link.path)} class:active={page.url.pathname === resolve(link.path)}>
+						<Icon icon={link.icon} size={link.size} />
 						<span>{link.name}</span>
 					</a>
 				</li>
@@ -46,151 +48,123 @@
 		</ul>
 	</nav>
 	<footer>
-		<div class="settings" aria-label="Settings">
-			<Fa icon={faCog} size="lg" />
-			<span>Settings</span>
-			<ThemeSwitcher />
-		</div>
+		<ul>
+			<li>
+				<div class="settings" aria-label="Settings">
+					<Icon icon={faCloudMoonRain} size="2x" />
+					<span>Settings </span>
+				</div>
+			</li>
+		</ul>
 	</footer>
 </aside>
+
 <main>
 	{@render children()}
 </main>
 
-<!------ /HTML ------>
-
 <style>
-	aside {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: var(--nav-width);
-		height: 100vh;
-
-		display: flex;
-		flex-direction: column;
-
-		background: var(--bg-navbar);
-		backdrop-filter: blur(12px);
-		border-right: 1px solid var(--border);
-
-		z-index: 100;
-		transition: width var(--transition-speed);
-		overflow: hidden;
-	}
-	aside:hover {
-		width: var(--nav-hover-width);
-	}
-
-	nav {
-		flex: 1;
-		overflow-y: auto;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-	nav::-webkit-scrollbar {
-		display: none;
-	}
-	nav ul {
-		list-style: none;
-		padding: 0.5rem 0;
-		margin: 0;
-
-		display: flex;
-		flex-direction: column;
-	}
-	nav a,
-	footer .settings {
-		height: 3.25rem;
-		width: 100%;
-		gap: 1rem;
-		padding: 0 1.5rem;
-
-		display: flex;
-		align-items: center;
-
-		color: var(--text-muted);
-		text-decoration: none;
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		font: inherit;
-		font-size: 0.9rem;
-		white-space: nowrap;
-	}
-	nav a:hover,
-	footer .settings:hover {
-		background: var(--nav-link-hover);
-		color: var(--accent);
-	}
-
-	nav a :global(svg),
-	footer .settings :global(svg) {
-		width: 1.25rem;
-		min-width: 1.25rem;
-		color: var(--icon);
-	}
-	nav a:hover :global(svg),
-	footer .settings:hover :global(svg) {
-		color: var(--accent);
-	}
-
-	nav span,
-	footer span {
-		opacity: 0;
-		transition: opacity var(--transition-speed);
-	}
-	aside:hover span {
-		opacity: 1;
-	}
-
-	footer {
-		padding: 0;
-		border-top: 1px solid var(--border);
+	* {
+		--sidebar: 4rem;
 	}
 
 	main {
-		margin-left: var(--nav-width);
-		min-height: 100vh;
-		overflow-x: hidden;
+		margin-left: var(--sidebar);
+	}
+	.sidebar {
+		position: fixed;
+		background-color: var(--bg);
+		transition: width var(--speed) ease;
+		overflow: none;
+		z-index: 10;
+		position: fixed;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		border-right: 1px solid var(--text-muted);
+	}
+	.sidebar ul,
+	li,
+	a,
+	div {
+		height: 4rem;
+		text-decoration: none;
+	}
+	.sidebar a,
+	div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 1rem;
 	}
 
-	@media (max-width: 600px) {
-		aside {
-			top: auto;
+	.sidebar a:hover,
+	div:hover {
+		color: var(--text-muted);
+	}
+	.sidebar a.active {
+		color: var(--text-muted);
+	}
+	.sidebar a,
+	div {
+		color: var(--text);
+	}
+
+	.settings {
+		font-weight: bold;
+	}
+	.logo {
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+	.logo:hover :global(.icon) {
+		transform: rotate(0deg);
+		transition: transform var(--speed);
+	}
+
+	.sidebar:hover .logo :global(.icon) {
+		transform: rotate(-120deg);
+		transition: transform var(--speed);
+	}
+
+	@media only screen and (max-width: 600px) {
+		.sidebar {
 			bottom: 0;
 			width: 100vw;
-			height: auto;
-
-			flex-direction: row;
-			border-right: none;
-			border-top: 1px solid var(--border);
+			height: var(--sidebar);
+			overflow: hidden;
 		}
-		aside:hover {
-			width: 100vw;
-		}
-		nav ul {
-			flex-direction: row;
-			justify-content: space-around;
-		}
-		nav a {
-			height: 3.5rem;
-			padding: 0.25rem;
-			gap: 0.2rem;
-
-			flex-direction: column;
-			justify-content: center;
-			font-size: 0.7rem;
-		}
-		span {
-			opacity: 1;
-		}
-		footer {
+		header,
+		span,
+		:global(.theme-toggle) {
 			display: none;
 		}
+
+		.sidebar ul {
+			display: flex;
+			justify-content: space-around;
+		}
 		main {
-			margin-left: 0;
-			padding-bottom: 4.5rem;
+			margin: 0;
+		}
+	}
+
+	@media only screen and (min-width: 600px) {
+		.sidebar {
+			top: 0;
+			width: var(--sidebar);
+			height: 100vh;
+		}
+		.sidebar:hover {
+			width: 16rem;
+		}
+
+		.sidebar span {
+			display: none;
+			margin: 0 2rem;
+		}
+		.sidebar:hover span {
+			display: flex;
+			flex-direction: row;
 		}
 	}
 </style>

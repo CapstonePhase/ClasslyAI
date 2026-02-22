@@ -1,14 +1,17 @@
 <script lang="ts">
-	import Card from '$lib/components/Card.svelte';
-	import Fa from 'svelte-fa';
+	import Card from '$lib/components/ui/Card.svelte';
+	import Icon from '$lib/components/ui/Icon.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import PageHeader from '$lib/components/layout/PageHeader.svelte';
+	import PageSection from '$lib/components/layout/PageSection.svelte';
+	import PageFooter from '$lib/components/layout/PageFooter.svelte';
 	import {
 		faGraduationCap,
+		faArrowRight,
 		faBolt,
 		faLock,
-		faHeart,
-		faArrowRight
+		faHeart
 	} from '@fortawesome/free-solid-svg-icons';
-	import { resolve } from '$app/paths';
 
 	const values = [
 		{
@@ -29,87 +32,41 @@
 	];
 </script>
 
-<!-- Hero -->
-<section class="section section-center hero">
-	<div class="hero-badge">
-		<Fa icon={faGraduationCap} />
+<PageHeader
+	heading="Learning, reimagined."
+	subtitle="ClasslyAI pairs the power of generative AI with proven study techniques so every student can learn faster, retain more, and stress less."
+>
+	{#snippet badge()}
+		<Icon icon={faGraduationCap} size="1.2rem" />
 		<span>About ClasslyAI</span>
-	</div>
-	<h1>Learning, <em>reimagined.</em></h1>
-	<p class="subtitle">
-		ClasslyAI pairs the power of generative AI with proven study techniques so every student can
-		learn faster, retain more, and stress less.
-	</p>
-</section>
+	{/snippet}
+</PageHeader>
 
-<!-- Mission -->
-<section class="section mission">
-	<h2 class="section-title">Our mission</h2>
-	<p class="text-muted mission-body">
+<PageSection heading="Our mission" prose>
+	<p>
 		Education shouldn't depend on expensive tutors or one-size-fits-all textbooks. We're building an
-		AI study companion that adapts to <em>you</em> — your pace, your topics, your goals — and makes high-quality
-		learning accessible to everyone.
+		AI study companion that adapts to <em>you</em> — your pace, your topics, your goals.
 	</p>
-</section>
+</PageSection>
 
-<!-- Values -->
-<section class="section">
-	<h2 class="section-title">What we stand for</h2>
-	<div class="auto-grid">
-		{#each values as v (v.title)}
-			<Card title={v.title}>
-				{#snippet content()}
-					<div class="value-body">
-						<span class="icon-accent"><Fa icon={v.icon} size="lg" /></span>
-						<p class="text-muted value-text">{v.text}</p>
-					</div>
-				{/snippet}
-			</Card>
-		{/each}
-	</div>
-</section>
+<PageSection heading="What we stand for" grid>
+	{#each values as value (value.title)}
+		<Card preset="notched">
+			{#snippet content()}
+				<Icon icon={value.icon} size="2rem" color="var(--color-accent)" />
+				<h3>{value.title}</h3>
+				<p>{value.text}</p>
+			{/snippet}
+		</Card>
+	{/each}
+</PageSection>
 
-<!-- CTA -->
-<section class="section section-center cta">
-	<h2 class="section-title">Ready to try it?</h2>
-	<p class="text-muted">
-		Jump in and start your first AI-powered study session — it only takes a minute.
-	</p>
-	<a href={resolve('/dashboard')} class="btn btn-primary">
+<PageFooter
+	heading="Ready to try it?"
+	subtitle="Jump in and start your first AI-powered study session — it only takes a minute."
+>
+	<Button href="/dashboard" size="lg">
 		Get Started
-		<Fa icon={faArrowRight} />
-	</a>
-</section>
-
-<style>
-	.cta {
-		padding-top: 3rem;
-		padding-bottom: 4rem;
-		gap: 0.75rem;
-	}
-
-	/* Mission */
-	.mission-body {
-		line-height: 1.8;
-		text-align: center;
-		max-width: 560px;
-		margin: 0 auto;
-	}
-
-	.mission em {
-		font-style: normal;
-		color: var(--text);
-		font-weight: 600;
-	}
-
-	/* Values */
-	.value-body {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.value-text {
-		font-size: 0.92rem;
-	}
-</style>
+		<Icon icon={faArrowRight} />
+	</Button>
+</PageFooter>
