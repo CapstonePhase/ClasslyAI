@@ -53,7 +53,7 @@
 	{#each values as value (value.title)}
 		<Card preset="notched">
 			{#snippet content()}
-				<Icon icon={value.icon} size="2rem" color="var(--color-accent)" />
+				<Icon icon={value.icon} size="2rem" color="var(--accent)" />
 				<h3>{value.title}</h3>
 				<p>{value.text}</p>
 			{/snippet}

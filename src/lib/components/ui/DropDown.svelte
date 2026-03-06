@@ -72,22 +72,22 @@
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
-		background: var(--color-surface); /* */
-		color: var(--color-text); /* */
-		border: 1px solid var(--color-border); /* */
-		border-radius: var(--radius-base); /* */
+		background: var(--bg); /* */
+		color: var(--text); /* */
+		border: 1px solid var(--border); /* */
+		border-radius: var(--radius); /* */
 		font-weight: 500;
 		cursor: pointer;
-		transition: all var(--transition-speed) ease; /* */
+		transition: all var(--time) ease; /* */
 	}
 
 	.trigger-button:hover {
-		background: var(--color-bg);
-		border-color: var(--color-accent); /* */
+		background: var(--bg);
+		border-color: var(--accent); /* */
 	}
 
 	.chevron {
-		transition: transform var(--transition-speed);
+		transition: transform var(--time);
 		opacity: 0.6;
 	}
 
@@ -103,8 +103,8 @@
 	}
 
 	.menu-inner {
-		background: var(--color-bg); /* */
-		border: 1px solid var(--color-border); /* */
+		background: var(--bg); /* */
+		border: 1px solid var(--border); /* */
 		border-radius: var(--radius-lg); /* Using larger radius for the menu */
 		padding: 0.25rem;
 		overflow: hidden;
@@ -137,14 +137,14 @@
 		width: 100%;
 		padding: 0.6rem 0.8rem;
 		font-size: 0.875rem;
-		color: var(--color-text);
+		color: var(--text);
 		border-radius: var(--radius-base);
 		text-align: left;
-		transition: background var(--transition-speed);
+		transition: background var(--time);
 	}
 
 	:global(.menu-inner button:hover) {
-		background: var(--color-surface);
-		color: var(--color-accent);
+		background: var(--bg);
+		color: var(--accent);
 	}
 </style>

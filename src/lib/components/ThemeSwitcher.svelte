@@ -1,77 +1,38 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
 
-	let theme = $state<'light' | 'dark'>('light');
+	let currentTheme = $state('default');
+	const themes = ['default', 'forest', 'solar', 'ocean'];
 
 	onMount(() => {
-		// 1. Check LocalStorage OR System Preference on load
-		const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
-		const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-		theme = saved || system;
-		applyTheme(theme);
+		const savedTheme = localStorage.getItem('theme');
+		if (savedTheme && themes.includes(savedTheme)) {
+			currentTheme = savedTheme;
+		} else {
+			// Set initial state on mount
+			document.documentElement.setAttribute('data-theme', currentTheme);
+		}
 	});
 
-	function applyTheme(newTheme: 'light' | 'dark') {
-		// Update HTML attribute for CSS
-		document.documentElement.setAttribute('data-theme', newTheme);
-		// Save preference
-		localStorage.setItem('theme', newTheme);
-	}
-
-	function toggle() {
-		theme = theme === 'light' ? 'dark' : 'light';
-		applyTheme(theme);
-	}
+	$effect(() => {
+		document.documentElement.setAttribute('data-theme', currentTheme);
+		localStorage.setItem('theme', currentTheme);
+	});
 </script>
 
-<button onclick={toggle} aria-label="Toggle Dark Mode" class="theme-toggle">
-	<div class="icon-container" data-show={theme === 'light'}>
-		<Fa icon={faSun} size="lg" />
-	</div>
-	<div class="icon-container" data-show={theme === 'dark'}>
-		<Fa icon={faMoon} size="lg" />
-	</div>
-</button>
+<select bind:value={currentTheme} class="theme-select">
+	{#each themes as theme}
+		<option value={theme}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</option>
+	{/each}
+</select>
 
 <style>
-	.theme-toggle {
-		width: 1.2rem;
-		height: 1.2rem;
-		background: var(--color-surface);
-		border: 0px none var(--color-border);
-		color: var(--color-text);
-		border-radius: var(--radius-base);
+	.theme-select {
+		padding: 0.5rem;
+		border-radius: 6px;
+		border: 1px solid var(--border);
+		background-color: var(--mg);
+		color: var(--text);
 		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
-		transition: all var(--transition-speed);
-	}
-
-	.theme-toggle:hover {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
-	}
-
-	.icon-container {
-		position: absolute;
-		transition:
-			transform 0.3s ease,
-			opacity 0.3s ease;
-	}
-
-	/* Animation Logic: Rotate and fade based on state */
-	[data-show='true'] {
-		opacity: 1;
-		transform: rotate(0deg) scale(1);
-	}
-
-	[data-show='false'] {
-		opacity: 0;
-		transform: rotate(90deg) scale(0.5);
 	}
 </style>

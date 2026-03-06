@@ -4,12 +4,14 @@
 		badge,
 		redirect,
 		heading,
-		subtitle
+		subtitle,
+		children
 	}: {
 		badge?: Snippet;
 		redirect?: Snippet;
 		heading: string;
 		subtitle?: string;
+		children?: Snippet;
 	} = $props();
 </script>
 
@@ -30,6 +32,10 @@
 		<nav class="actions">
 			{@render redirect()}
 		</nav>
+	{/if}
+
+	{#if children}
+		{@render children()}
 	{/if}
 </header>
 

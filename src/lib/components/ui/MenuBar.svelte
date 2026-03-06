@@ -54,7 +54,7 @@
 		background: var(--bg);
 		width: 100%;
 		/* Variable for children to inherit */
-		--icon-color: var(--color-text-muted);
+		--icon-color: var(--muted);
 	}
 
 	.content,

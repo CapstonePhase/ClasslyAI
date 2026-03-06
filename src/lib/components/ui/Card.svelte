@@ -21,13 +21,13 @@
 		display: inline;
 		padding: 2rem;
 		background: var(--bg);
-		border: 1px solid var(--text-muted);
+		border: 1px solid var(--muted);
 		border-radius: var(--radius);
-		transition: transform var(--speed);
+		transition: transform var(--time);
 	}
 
 	.card[data-preset='notched'] {
-		border-bottom: 4px solid var(--text-muted);
+		border-bottom: 4px solid var(--muted);
 	}
 
 	.card[data-preset='flat'] {

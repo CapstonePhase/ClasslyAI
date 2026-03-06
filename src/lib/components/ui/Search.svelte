@@ -5,7 +5,7 @@
 		value = $bindable(),
 		variant = 'text',
 		icon,
-		accent = 'var(--color-accent)',
+		accent = 'var(--accent)',
 		padding = '0.5rem',
 		...rest // Captures id, name, required, min, max, etc.
 	}: {
@@ -30,9 +30,9 @@
 		display: flex;
 		align-items: center;
 		padding: var(--padding);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--border);
 		border-radius: var(--radius-base);
-		background: var(--form-input-bg, var(--color-bg));
+		background: var(--form-input-bg, var(--bg));
 	}
 	.search-container:focus-within {
 		border-color: var(--accent);

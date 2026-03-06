@@ -48,8 +48,8 @@
 
 		/* Timing and easing from your app tokens */
 		transition:
-			color var(--speed, 0.2s) ease,
-			transform var(--speed, 0.2s) ease;
+			color var(--time, 0.2s) ease,
+			transform var(--time, 0.2s) ease;
 	}
 
 	/* Preset mappings using your app.css tokens */
@@ -58,11 +58,11 @@
 	}
 
 	.icon-wrapper[data-preset='muted'] {
-		color: var(--text-muted);
+		color: var(--muted);
 	}
 
 	.icon-wrapper[data-preset='accent'] {
-		color: var(--text-accent);
+		color: var(--accent);
 	}
 
 	/* Optional: Interaction pattern matching your Card hover */

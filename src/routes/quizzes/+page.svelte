@@ -186,7 +186,7 @@
 						<Icon
 							icon={r.isCorrect ? faCheckCircle : faTimesCircle}
 							size="2rem"
-							color={r.isCorrect ? 'var(--color-success, #22c55e)' : 'var(--color-error, #ef4444)'}
+							color={r.isCorrect ? 'var(--success, #22c55e)' : 'var(--error, #ef4444)'}
 						/>
 						<h3>Question {r.questionIndex + 1}</h3>
 					</div>
@@ -254,20 +254,15 @@
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem;
-		border: 1px solid var(--text-muted);
+		border: 1px solid var(--muted);
 		border-radius: 0.5rem;
 		cursor: pointer;
 		transition: background-color 0.2s;
 	}
 
 	.option-label:hover {
-		background-color: var(--bg-front);
+		background-color: var(--bg);
 	}
-
-	.form-actions {
-		margin-top: 2rem;
-	}
-
 	.form-actions.centered {
 		display: flex;
 		justify-content: center;
@@ -288,10 +283,8 @@
 	.result-details {
 		margin-top: 1rem;
 		padding-top: 1rem;
-		border-top: 1px solid var(--text-muted);
-		font-size: 0.9rem;
+		border-top: 1px solid var(--muted);
 	}
-
 	.detail-row {
 		display: flex;
 		justify-content: space-between;

@@ -41,6 +41,8 @@
 		"@fortawesome/free-solid-svg-icons": "^7.1.0",
 		"@google/genai": "^1.40.0",
 		"@google/generative-ai": "^0.24.1",
+		"@lucide/svelte": "^0.575.0",
+		"bits-ui": "^2.16.2",
 		"svelte-fa": "^4.0.4"
 	}
 }

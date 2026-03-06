@@ -65,8 +65,8 @@
 			<defs>
 				{#each datasets as ds, i (ds.label)}
 					<linearGradient id="gradient-{i}" x1="0" x2="0" y1="0" y2="1">
-						<stop offset="0%" stop-color={ds.color || 'var(--color-accent)'} stop-opacity="0.4" />
-						<stop offset="100%" stop-color={ds.color || 'var(--color-accent)'} stop-opacity="0" />
+						<stop offset="0%" stop-color={ds.color || 'var(--accent)'} stop-opacity="0.4" />
+						<stop offset="100%" stop-color={ds.color || 'var(--accent)'} stop-opacity="0" />
 					</linearGradient>
 				{/each}
 			</defs>
@@ -76,7 +76,7 @@
 				<path
 					d={`M ${getLinePath(ds.data)}`}
 					fill="none"
-					stroke={ds.color || 'var(--color-accent)'}
+					stroke={ds.color || 'var(--accent)'}
 					stroke-width="2px"
 					vector-effect="non-scaling-stroke"
 					stroke-linecap="round"
@@ -100,8 +100,8 @@
 		display: flex;
 		width: 100%;
 		font-size: 0.75rem;
-		background-color: var(--color-surface); /* Card background */
-		border: 1px solid var(--color-border);
+		background-color: var(--bg); /* Card background */
+		border: 1px solid var(--border);
 		border-radius: var(--radius-lg);
 		padding: 1.5rem; /* Inner padding prevents clipping */
 		gap: 1rem;
@@ -112,7 +112,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		color: var(--color-text-muted);
+		color: var(--muted);
 		padding-bottom: 1.5rem; /* Space for x-axis */
 		font-variant-numeric: tabular-nums;
 	}
@@ -137,12 +137,12 @@
 
 	.line {
 		width: 100%;
-		border-top: 1px dashed var(--color-border);
+		border-top: 1px dashed var(--border);
 		opacity: 0.6;
 	}
 	/* Add bottom border to the last line manually if needed, or rely on axis */
 	.line:last-child {
-		border-top: 1px solid var(--color-border);
+		border-top: 1px solid var(--border);
 		/* Solid base line */
 	}
 
@@ -169,7 +169,7 @@
 		position: absolute;
 		transform: translateX(-50%);
 		/* Center label on the point */
-		color: var(--color-text-muted);
+		color: var(--muted);
 		white-space: nowrap;
 	}
 

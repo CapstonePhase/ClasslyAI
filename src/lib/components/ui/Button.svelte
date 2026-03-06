@@ -28,21 +28,21 @@
 		border-radius: var(--radius);
 		font-weight: 500;
 		cursor: pointer;
-		transition: all var(--speed);
+		transition: all var(--time);
 		border: 1px solid transparent;
 	}
 
 	/* Variant logic stays here, not in app.css */
 	.btn[data-variant='default'] {
 		background: var(--bg);
-		color: var(--text-muted);
+		color: var(--muted);
 	}
 	.btn[data-variant='default']:hover {
 		color: var(--text);
 	}
 	.btn[data-variant='outline'] {
 		background: transparent;
-		border-color: var(--text-muted);
+		border-color: var(--muted);
 		color: var(--text);
 	}
 	.btn[data-variant='outline']:hover {

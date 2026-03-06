@@ -50,7 +50,7 @@
 		{
 			label: 'Sales',
 			data: [400, 300, 550, 480, 700, 900],
-			color: 'var(--color-accent)' // Uses your Blue 500
+			color: 'var(--accent)' // Uses your Blue 500
 		},
 		{
 			label: 'Views',
@@ -70,7 +70,7 @@
 		<div class="actions">
 			<Button variant="outline" size="lg">
 				Export
-				<Icon icon={faDownload}/>
+				<Icon icon={faDownload} />
 			</Button>
 		</div>
 	{/snippet}
@@ -90,7 +90,7 @@
 
 		<div class="workspace-card">
 			<div class="card-header">
-				<Icon icon={faImage} size="1.2rem" color="var(--color-accent)" />
+				<Icon icon={faImage} size="1.2rem" color="var(--accent)" />
 				<h3>Snapshots</h3>
 			</div>
 			<div class="card-content">
@@ -130,7 +130,7 @@
 
 	.workspace-card {
 		background: var(--bg);
-		border: 1px solid var(--text-muted);
+		border: 1px solid var(--muted);
 		border-radius: 1rem;
 		padding: 1.5rem;
 		display: flex;

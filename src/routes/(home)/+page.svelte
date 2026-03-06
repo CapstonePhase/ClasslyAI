@@ -16,6 +16,7 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { resolve } from '$app/paths';
 
+	// home page content
 	const features = [
 		{
 			title: 'Smart Quizzes',
@@ -57,7 +58,7 @@
 	subtitle="ClasslyAI generates personalized study material, quizzes, and performance analytics — all driven by AI so you can focus on actually learning."
 >
 	{#snippet badge()}
-		<Icon icon={faRobot} size="1.2rem" color="var(--color-accent)" />
+		<Icon icon={faRobot} size="1.2rem" color="var(--accent)" />
 		<span>Powered by Gemini</span>
 	{/snippet}
 
@@ -78,7 +79,7 @@
 		{#each features as feature (feature.title)}
 			<Card preset="notched">
 				{#snippet content()}
-					<Icon icon={feature.icon} size="2rem" color="var(--color-accent)" />
+					<Icon icon={feature.icon} size="2rem" color="var(--accent)" />
 					<h3>{feature.title}</h3>
 					<p>{feature.text}</p>
 				{/snippet}
@@ -104,7 +105,7 @@
 	subtitle="Jump into your dashboard and start your first AI study session."
 >
 	{#snippet icon()}
-		<Icon icon={faGraduationCap} size="2x" color="var(--color-accent)" />
+		<Icon icon={faGraduationCap} size="2x" color="var(--accent)" />
 	{/snippet}
 
 	<Button href={resolve('/dashboard')} size="lg">
@@ -157,6 +158,6 @@
 		justify-content: center;
 		border-radius: 50%;
 		font-weight: 700;
-		border: 2px solid var(--text-muted);
+		border: 2px solid var(--muted);
 	}
 </style>

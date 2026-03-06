@@ -171,10 +171,10 @@
 <style>
 	.table-container {
 		width: 100%;
-		border: 1px solid var(--color-border, #eee);
+		border: 1px solid var(--border, #eee);
 		border-radius: 0.75rem;
 		overflow: hidden;
-		background: var(--color-surface, #fff);
+		background: var(--bg, #fff);
 	}
 
 	.table-scroll {
@@ -190,17 +190,17 @@
 	th,
 	td {
 		padding: 0.875rem 1rem;
-		border-bottom: 1px solid var(--color-border, #eee);
-		color: var(--color-text, #333);
+		border-bottom: 1px solid var(--border, #eee);
+		color: var(--text, #333);
 	}
 
 	th {
-		background: var(--color-surface-soft, #f9fafb);
+		background: var(--mg, #f9fafb);
 		font-weight: 600;
 		text-transform: uppercase;
 		font-size: 0.75rem;
 		letter-spacing: 0.05em;
-		color: var(--color-text-muted, #666);
+		color: var(--muted, #666);
 		user-select: none;
 	}
 
@@ -209,14 +209,14 @@
 		transition: color 0.2s;
 	}
 	th.sortable:hover {
-		color: var(--color-accent, #007bff);
+		color: var(--accent, #007bff);
 	}
 
 	tr:last-child td {
 		border-bottom: none;
 	}
 	tr:hover td {
-		background: var(--color-surface-soft, #f9fafb);
+		background: var(--mg, #f9fafb);
 	}
 	tr.selected td {
 		background: #eff6ff;
@@ -236,7 +236,7 @@
 	.empty {
 		text-align: center;
 		padding: 3rem;
-		color: var(--color-text-muted);
+		color: var(--muted);
 	}
 
 	.pagination {
@@ -244,14 +244,14 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0.75rem 1rem;
-		background: var(--color-surface-soft);
-		border-top: 1px solid var(--color-border);
+		background: var(--mg);
+		border-top: 1px solid var(--border);
 	}
 
 	button {
 		padding: 0.25rem 0.75rem;
-		border: 1px solid var(--color-border);
-		background: var(--color-surface);
+		border: 1px solid var(--border);
+		background: var(--bg);
 		border-radius: 0.25rem;
 		cursor: pointer;
 		font-size: 0.8rem;

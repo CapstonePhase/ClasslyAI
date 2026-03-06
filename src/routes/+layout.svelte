@@ -13,6 +13,8 @@
 	import { page } from '$app/state';
 
 	import { resolve } from '$app/paths';
+	import ModeToggle from '$lib/components/ModeToggle.svelte';
+	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
 	let { children }: { children: Snippet } = $props();
 
 	// 2. APPLY the global App.Link type here
@@ -59,6 +61,11 @@
 	</footer>
 </aside>
 
+<div class="colors">
+	<ModeToggle />
+	<ThemeSwitcher />
+</div>
+
 <main>
 	{@render children()}
 </main>
@@ -68,19 +75,26 @@
 		--sidebar: 4rem;
 	}
 
+	.colors {
+		position: fixed;
+		top: 0;
+		right: 0;
+		margin: 2rem 2rem 0rem 0rem;
+	}
+
 	main {
 		margin-left: var(--sidebar);
 	}
 	.sidebar {
 		position: fixed;
 		background-color: var(--bg);
-		transition: width var(--speed) ease;
+		transition: width var(--time) ease;
 		overflow: none;
 		z-index: 10;
 		position: fixed;
 		display: grid;
 		grid-template-rows: auto 1fr auto;
-		border-right: 1px solid var(--text-muted);
+		border-right: 1px solid var(--muted);
 	}
 	.sidebar ul,
 	li,
@@ -99,10 +113,10 @@
 
 	.sidebar a:hover,
 	div:hover {
-		color: var(--text-muted);
+		color: var(--muted);
 	}
 	.sidebar a.active {
-		color: var(--text-muted);
+		color: var(--muted);
 	}
 	.sidebar a,
 	div {
@@ -118,12 +132,12 @@
 	}
 	.logo:hover :global(.icon) {
 		transform: rotate(0deg);
-		transition: transform var(--speed);
+		transition: transform var(--time);
 	}
 
 	.sidebar:hover .logo :global(.icon) {
 		transform: rotate(-120deg);
-		transition: transform var(--speed);
+		transition: transform var(--time);
 	}
 
 	@media only screen and (max-width: 600px) {
