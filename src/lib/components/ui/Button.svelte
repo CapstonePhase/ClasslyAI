@@ -50,6 +50,16 @@
 		color: var(--text);
 	}
 
+		.btn[data-variant='link'] {
+		background: linear-gradient(0deg, var(--fg) 0%, var(--bg) 100%);
+		color: var(--text);
+		box-shadow: none;
+	}
+	.btn[data-variant='link']:hover {
+		background: var(--accent);
+		color: white;
+	}
+
 	/* Size logic */
 	.btn[data-size='sm'] {
 		height: 2rem;
@@ -66,4 +76,6 @@
 		padding: 0 2rem;
 		font-size: 1rem;
 	}
+
+	
 </style>

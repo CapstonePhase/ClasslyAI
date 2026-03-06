@@ -38,7 +38,7 @@
 {:else if tasks.data}
 	<ul>
 		{#each tasks.data as task (task._id)}
-			<li>
+			<li>src/lib/convex/_generated
 				<input
 					id="toggle"
 					type="checkbox"
