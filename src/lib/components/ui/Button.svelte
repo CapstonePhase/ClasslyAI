@@ -41,7 +41,7 @@
 		color: var(--text);
 	}
 	.btn[data-variant='outline'] {
-		background: linear-gradient(0deg, var(--fg) 0%, var(--bg) 100%);
+		background: var(--fg);
 		border-color: var(--muted);
 		color: var(--text);
 	}

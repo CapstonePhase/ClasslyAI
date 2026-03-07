@@ -3,7 +3,7 @@
 	import { api } from '../convex/_generated/api';
 	import type { Id } from '../convex/_generated/dataModel';
 	import { Plus} from 'lucide-svelte';
-	import Button from './ui/Button.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
 	// 1. Subscribe to the list of tasks
 	// 'tasks' will be a reactive object with .data, .isLoading, and .error
 	const tasks = useQuery(api.tasks.list, {});
@@ -38,7 +38,7 @@
 {:else if tasks.data}
 	<ul>
 		{#each tasks.data as task (task._id)}
-			<li>
+			<li>src/lib/convex/_generated
 				<input
 					id="toggle"
 					type="checkbox"
