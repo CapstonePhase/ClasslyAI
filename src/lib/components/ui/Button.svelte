@@ -51,7 +51,7 @@
 	}
 
 		.btn[data-variant='link'] {
-		background: linear-gradient(0deg, var(--fg) 0%, var(--bg) 100%);
+		background: var(--mg);
 		color: var(--text);
 		box-shadow: none;
 	}
